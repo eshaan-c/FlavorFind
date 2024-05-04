@@ -31,7 +31,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/restaurants" element={<RestaurantsPage />} />
-          <Route path="/albums/:album_id" element={<AlbumInfoPage />} />
+          <Route path="/restaurants/:restaurant_id" element={<AlbumInfoPage />} />
           <Route path="/songs" element={<SongsPage />} />
         </Routes>
       </BrowserRouter>

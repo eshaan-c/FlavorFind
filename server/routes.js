@@ -386,14 +386,16 @@ const find_filtered_restaurants = async function(req, res) {
 const top_restaurants = async function(req, res) {
     connection.query(`
     SELECT
-    id,
+    city_id,
+    restaurant_id,
     city_name,
     address,
     restaurant_name,
     rating
     FROM (
         SELECT
-            c.id,
+            c.id AS city_id,
+            r.id AS restaurant_id,
             c.city AS city_name,
             r.address AS address,
             r.name AS restaurant_name,
@@ -408,7 +410,7 @@ const top_restaurants = async function(req, res) {
     ) ranked_restaurants
     WHERE
         row_num = 1
-    ORDER BY id
+    ORDER BY city_id
     LIMIT 10`,
       (err, data) => {
         if (err) {
