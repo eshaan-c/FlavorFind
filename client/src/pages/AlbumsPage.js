@@ -5,12 +5,12 @@ import { NavLink } from 'react-router-dom';
 const config = require('../config.json');
 
 export default function AlbumsPage() {
-  const [albums, setAlbums] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
 
   useEffect(() => {
     fetch(`http://${config.server_host}:${config.server_port}/top_restaurants`)
       .then(res => res.json())
-      .then(resJson => setAlbums(resJson));
+      .then(resJson => setRestaurants(resJson));
   }, []);
 
   // These formatting options leverage flexboxes, an incredibly powerful tool for formatting dynamic layouts.
@@ -25,7 +25,7 @@ export default function AlbumsPage() {
     <>
       <h2>Top restaurants below</h2>
       <Container style={format3}>
-        {albums.map((restaurant) =>
+        {restaurants.map((restaurant) =>
           <Box
             key={restaurant.id}
             p={3}
