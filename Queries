@@ -1,0 +1,51 @@
+#Query 1: Find nearest restaurants in a city
+SELECT DISTINCT r.name, r.rating, r.city, r.address, (
+        3959 * ACOS(
+            COS(RADIANS(c.lat)) * COS(RADIANS(r.lat)) *
+            COS(RADIANS(r.lng) - RADIANS(c.lng)) +
+            SIN(RADIANS(c.lat)) * SIN(RADIANS(r.lat))
+        )
+    ) AS distance
+FROM Restaurants r
+JOIN Cities c ON r.city = c.city
+WHERE c.city LIKE '%Los Angeles%'
+ORDER BY distance ASC;
+
+#Query 2: Find average ratings of cuisines
+SELECT category, AVG(rating) AS avg_rating
+FROM Restaurants
+GROUP BY category
+ORDER BY category;
+
+#Query 3: Find closest hotels in a city
+SELECT DISTINCT h.name, h.rating, h.city, h.description
+FROM Hotels h
+JOIN Cities c ON c.city LIKE '%New York%' AND h.city LIKE '%New York%'
+WHERE ABS(h.lat - c.lat) <= 0.1 AND ABS(h.lng - c.lng) <= 0.1;
+
+#Query 4: Find the number of restaurants in a given city (there may be duplicates)
+SELECT c.id, c.city, c.zips, COUNT(r.id) AS num_restaurants
+FROM Cities c
+LEFT JOIN Restaurants r ON c.city = r.city
+WHERE c.city = 'Raleigh'
+AND FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+GROUP BY c.id
+ORDER BY num_restaurants DESC;
+
+#Query 5: Find restaurants in a city that have a specified rating and category
+SELECT name, rating, category, address
+FROM Restaurants
+WHERE rating > 4.5 AND category LIKE '%Italian%' AND city = 'New York'
+ORDER BY rating DESC;
+
+#Query 7: Find top restaurants in each city
+SELECT DISTINCT c.id, c.city AS city_name, r.address AS address, r.name AS restaurant_name, r.rating
+FROM Cities c
+JOIN Restaurants r ON c.city = r.city
+WHERE (r.id, r.city, r.rating) IN (
+    SELECT r.id, r.city, MAX(rating) AS max_rating
+    FROM Restaurants r JOIN Cities c on c.city = r.city
+    WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+    GROUP BY r.city
+) AND FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+ORDER BY r.rating DESC;
