@@ -32,7 +32,7 @@ export default function AlbumsPage() {
             m={2}
             style={{ background: '#c5cae9', borderRadius: '16px', border: '2px solid #000' }}
           >
-            <h4>{restaurant.restaurant_name}</h4>
+            <h4>{restaurant.city_name} - {restaurant.restaurant_name}</h4>
             <p>{restaurant.address}</p>
             <p>Rating: {restaurant.rating} / 5</p>
           </Box>

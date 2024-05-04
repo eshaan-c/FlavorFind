@@ -391,25 +391,25 @@ const top_restaurants = async function(req, res) {
     address,
     restaurant_name,
     rating
-FROM (
-    SELECT
-        c.id,
-        c.city AS city_name,
-        r.address AS address,
-        r.name AS restaurant_name,
-        r.rating,
-        ROW_NUMBER() OVER (PARTITION BY c.city ORDER BY r.rating DESC) AS row_num
-    FROM
-        Restaurants r
-    JOIN
-        Cities c ON r.city = c.city
+    FROM (
+        SELECT
+            c.id,
+            c.city AS city_name,
+            r.address AS address,
+            r.name AS restaurant_name,
+            r.rating,
+            ROW_NUMBER() OVER (PARTITION BY c.city ORDER BY r.rating DESC) AS row_num
+        FROM
+            Restaurants r
+        JOIN
+            Cities c ON r.city = c.city
+        WHERE
+            FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+    ) ranked_restaurants
     WHERE
-        FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
-) ranked_restaurants
-WHERE
-    row_num = 1
-ORDER BY id
-LIMIT 10`,
+        row_num = 1
+    ORDER BY id
+    LIMIT 10`,
       (err, data) => {
         if (err) {
           console.log(err);
