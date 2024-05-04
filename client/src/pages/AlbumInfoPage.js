@@ -8,20 +8,23 @@ const config = require('../config.json');
 
 export default function AlbumInfoPage() {
   const { restaurant_id } = useParams();
-
-  // const [songData, setSongData] = useState([{}]); // default should actually just be [], but empty object element added to avoid error in template code
-  const [albumData, setAlbumData] = useState([]);
-
-  const [selectedSongId, setSelectedSongId] = useState(null);
+  const [restaurantData, setRestaurantData] = useState([]);
 
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/find_restaurant_info/${restaurant_id}`)
+    fetch(`http://${config.server_host}:${config.server_port}/get_rest_info/${restaurant_id}`)
       .then(res => res.json())
-      .then(resJson => setAlbumData(resJson));
+      .then(resJson => setRestaurantData(resJson));
 
   }, [restaurant_id]);
 
   return (
-    <div>Restaurant Information for ID: {restaurant_id}</div>
+  <div>
+    <h2>Restaurant Information for ID: {restaurant_id}</h2>
+    <p>Name: {restaurantData.name}</p>
+    <p>Phone: {restaurantData.phone}</p>
+    <p>Website: {restaurantData.website}</p>
+    <p>Address: {restaurantData.address}</p>
+    <p>Category: {restaurantData.category}</p>
+  </div>
 );
 }
