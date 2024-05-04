@@ -38,7 +38,7 @@ export default function NavBar() {
         <Toolbar disableGutters>
           <NavText href='/' text='FlavorFind' isMain />
           <NavText href='/restaurants' text='Restaurants' />
-          <NavText href='/songs' text='Hotels' />
+          <NavText href='/hotels' text='Hotels' />
           <NavText href='/songs' text='Search' />
         </Toolbar>
       </Container>

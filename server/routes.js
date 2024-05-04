@@ -422,6 +422,30 @@ const top_restaurants = async function(req, res) {
     });
   }
 
+   //Query 8: Find the top hotels in each city
+ const top_hotels = async function(req, res) {
+  connection.query(`
+  SELECT id, city_name, address, hotel_name, rating
+  FROM (
+      SELECT c.id, c.city AS city_name, h.address AS address, h.name AS hotel_name, h.rating,
+          ROW_NUMBER() OVER (PARTITION BY c.city ORDER BY h.rating DESC) AS row_num
+      FROM Hotels h JOIN Cities c ON h.city_name = c.city
+      WHERE FIND_IN_SET(REGEXP_SUBSTR(h.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+  ) ranked_hotels
+  WHERE row_num = 1
+  ORDER BY id
+  LIMIT 10;
+  `,
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.json({});
+      } else {
+        res.json(data);
+      }
+  });
+}
+
   // Route: GET /restaurant/:id
   const get_rest_info = async function(req, res) {
     const restaurant_id = req.params.restaurant_id;
@@ -455,5 +479,6 @@ module.exports = {
   num_restaurants,
   find_filtered_restaurants,
   top_restaurants,
-  get_rest_info
+  get_rest_info,
+  top_hotels
 }
