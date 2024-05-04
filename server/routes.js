@@ -385,17 +385,31 @@ const find_filtered_restaurants = async function(req, res) {
 
 const top_restaurants = async function(req, res) {
     connection.query(`
-      SELECT DISTINCT c.id, c.city AS city_name, r.address AS address, r.name AS restaurant_name, r.rating
-      FROM Cities c
-      JOIN Restaurants r ON c.city = r.city
-      WHERE (r.id, r.city, r.rating) IN (
-          SELECT r.id, r.city, MAX(rating) AS max_rating
-          FROM Restaurants r JOIN Cities c on c.city = r.city
-          WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
-          GROUP BY r.city
-      ) AND FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
-      ORDER BY r.rating DESC
-      LIMIT 10`,
+    SELECT
+    id,
+    city_name,
+    address,
+    restaurant_name,
+    rating
+FROM (
+    SELECT
+        c.id,
+        c.city AS city_name,
+        r.address AS address,
+        r.name AS restaurant_name,
+        r.rating,
+        ROW_NUMBER() OVER (PARTITION BY c.city ORDER BY r.rating DESC) AS row_num
+    FROM
+        Restaurants r
+    JOIN
+        Cities c ON r.city = c.city
+    WHERE
+        FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+) ranked_restaurants
+WHERE
+    row_num = 1
+ORDER BY id
+LIMIT 10`,
       (err, data) => {
         if (err) {
           console.log(err);
