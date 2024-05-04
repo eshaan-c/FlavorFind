@@ -12,30 +12,6 @@ const connection = mysql.createConnection({
 });
 connection.connect((err) => err && console.log(err));
 
-/******************
- * WARM UP ROUTES *
- ******************/
-
-// Route 1: GET /author/:type
-const author = async function(req, res) {
-  // TODO (TASK 1): replace the values of name and pennkey with your own
-  const name = 'Eshaan Chichula';
-  const pennkey = 'eshaan';
-
-  // checks the value of type in the request parameters
-  // note that parameters are required and are specified in server.js in the endpoint by a colon (e.g. /author/:type)
-  if (req.params.type === 'name') {
-    // res.send returns data back to the requester via an HTTP response
-    res.send("Created By " + name);
-    // res.json({ name: name });
-  } else if (req.params.type === 'pennkey') {
-    res.send("Created By " + pennkey);
-    // res.json({ pennkey: pennkey});
-  } else {
-    res.status(400).json({});
-  }
-}
-
 // Route 2: GET /random
 const random = async function(req, res) {
   // you can use a ternary operator to check the value of request query values
@@ -287,8 +263,82 @@ const search_songs = async function(req, res) {
   });
 }
 
+const find_restaurants = async function(req, res) {
+  // given a city name, return nearby restaurants based on a distance function
+
+  const cityName = req.params.city;
+
+  connection.query(`
+    SELECT DISTINCT r.name, r.rating, r.city, r.address, (
+      3959 * ACOS(
+          COS(RADIANS(c.lat)) * COS(RADIANS(r.lat)) *
+          COS(RADIANS(r.lng) - RADIANS(c.lng)) +
+          SIN(RADIANS(c.lat)) * SIN(RADIANS(r.lat))
+      )
+    ) AS distance
+    FROM Restaurants r
+    JOIN Cities c ON r.city = c.city
+    WHERE c.city LIKE '%${cityName}%'
+    ORDER BY distance ASC;`,
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.json({});
+      } else {
+        res.json(data);
+      }
+  });
+}
+
+const average_cuisine_rating = async function(req, res) {
+  // given a type of cuisine, return the average rating of restaurants serving that cuisine
+
+  const cuisineType = req.params.cuisine;
+
+  connection.query(`
+  SELECT AVG(rating) AS avg_rating
+  FROM Restaurants
+  WHERE category = ?`,
+    [cuisineType],
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.json({});
+      } else {
+        res.json(data);
+      }
+  });
+}
+
+
+const closest_hotels = async function(req, res) {
+  const cityName = req.params.city;
+
+  connection.query(`
+    SELECT DISTINCT h.name, h.rating, h.city, h.description, (
+      3959 * ACOS(
+          COS(RADIANS(c.lat)) * COS(RADIANS(h.lat)) *
+          COS(RADIANS(h.lng) - RADIANS(c.lng)) +
+          SIN(RADIANS(c.lat)) * SIN(RADIANS(h.lat))
+      )
+    ) AS distance
+    FROM Hotels h
+    JOIN Cities c ON c.city LIKE '%${cityName}%' AND h.city LIKE '%${cityName}%'
+    WHERE ABS(h.lat - c.lat) <= 0.1 AND ABS(h.lng - c.lng) <= 0.1
+    ORDER BY distance ASC;
+  `,
+  (err, data) => {
+    if (err) {
+      console.log(err);
+      res.json({});
+    } else {
+      res.json(data);
+    }
+  });
+}
+
 module.exports = {
-  author,
+  // author,
   random,
   song,
   album,
@@ -297,4 +347,7 @@ module.exports = {
   top_songs,
   top_albums,
   search_songs,
+  find_restaurants,
+  average_cuisine_rating,
+  closest_hotels
 }
