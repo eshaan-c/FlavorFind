@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 const config = require('../config.json');
 
-export default function AlbumsPage() {
+export default function RestaurantsPage() {
   const [restaurants, setRestaurants] = useState([]);
 
   useEffect(() => {
