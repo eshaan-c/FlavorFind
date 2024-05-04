@@ -1,8 +1,8 @@
 {
-  "rds_host": "database-1.cry6qa2ac70u.us-east-2.rds.amazonaws.com",
+  "rds_host": "database-1.cpvsneq1zkow.us-east-1.rds.amazonaws.com",
   "rds_port": "3306",
   "rds_user": "admin",
-  "rds_password": "password",
+  "rds_password": "FlavorFind123",
   "rds_db": "SWIFTIFY",
   "server_host": "localhost",
   "server_port": "8080"
