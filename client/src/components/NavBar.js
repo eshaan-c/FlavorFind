@@ -6,19 +6,19 @@ import { NavLink } from 'react-router-dom';
 function NavText({ href, text, isMain }) {
   return (
     <Typography
-      variant={isMain ? 'h5' : 'h7'}
+      variant={isMain ? 'h4' : 'h7'}
       noWrap
       style={{
         marginRight: '30px',
-        fontFamily: 'monospace',
+        fontFamily: isMain ? 'Gill Sans' : 'system-ui',
         fontWeight: 700,
-        letterSpacing: '.3rem',
+        letterSpacing: '.2rem',
       }}
     >
       <NavLink
         to={href}
         style={{
-          color: 'inherit',
+          color: 'white',
           textDecoration: 'none',
         }}
       >
@@ -33,12 +33,13 @@ function NavText({ href, text, isMain }) {
 // props to how it changes the look of the component.
 export default function NavBar() {
   return (
-    <AppBar position='static'>
+    <AppBar position='static' style={{ backgroundColor: '#c74127' }}>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
-          <NavText href='/' text='SWIFTIFY' isMain />
-          <NavText href='/albums' text='ALBUMS' />
-          <NavText href='/songs' text='SONGS' />
+          <NavText href='/' text='FlavorFind' isMain />
+          <NavText href='/albums' text='Search' />
+          <NavText href='/songs' text='Restaurants' />
+          <NavText href='/songs' text='Hotels' />
         </Toolbar>
       </Container>
     </AppBar>
