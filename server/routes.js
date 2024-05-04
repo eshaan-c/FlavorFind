@@ -480,6 +480,23 @@ const top_restaurants = async function(req, res) {
     );
   };
 
+  // Route: GET /random
+  const random = async function(req, res) {
+    connection.query(`
+    SELECT r.name AS name, r.rating AS rating, r.address AS address, r.id AS id
+    FROM Restaurants r
+    WHERE r.rating > 4.75
+    ORDER BY RAND()
+    LIMIT 1;
+    `, (err, data) => {
+        if (err) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data[0]);
+        }
+    });
+  }
 
 
 module.exports = {
@@ -500,5 +517,6 @@ module.exports = {
   top_restaurants,
   get_rest_info,
   get_hotel_info,
-  top_hotels
+  top_hotels,
+  random
 }
