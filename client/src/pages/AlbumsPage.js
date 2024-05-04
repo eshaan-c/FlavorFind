@@ -8,7 +8,7 @@ export default function AlbumsPage() {
   const [albums, setAlbums] = useState([]);
 
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/albums`)
+    fetch(`http://${config.server_host}:${config.server_port}/top_restaurants`)
       .then(res => res.json())
       .then(resJson => setAlbums(resJson));
   }, []);
@@ -22,24 +22,23 @@ export default function AlbumsPage() {
   const format4 = { display: 'grid', justifyContent: 'space-evenly' };
 
   return (
-    // TODO (TASK 22): Try out the different provided formatting options by replacing “format1”  in the Container's style property with the other provided options.
-    // TODO (TASK 22): Choose the one that displays all the albums in a fluid grid.
-    <Container style={format3}>
-      {albums.map((album) =>
-        <Box
-          key={album.album_id}
-          p={3}
-          m={2}
-          style={{ background: '#c5cae9', borderRadius: '16px', border: '2px solid #000' }}
-        >
-          <img
-            key={album.album_id}
-            src={album.thumbnail_url}
-            alt={`${album.title} album art`}
-          />
-          <h4><NavLink to={`/albums/${album.album_id}`}>{album.title}</NavLink></h4>
-        </Box>
-      )}
-    </Container>
+    <>
+      <h2>Top restaurants below</h2>
+      <Container style={format3}>
+        {albums.map((restaurant) =>
+          <Box
+            key={restaurant.id}
+            p={3}
+            m={2}
+            style={{ background: '#c5cae9', borderRadius: '16px', border: '2px solid #000' }}
+          >
+            <h4>{restaurant.restaurant_name}</h4>
+            <p>{restaurant.address}</p>
+            <p>{restaurant.city_name}</p>
+            <p>Rating: {restaurant.rating}</p>
+          </Box>
+        )}
+      </Container>
+    </>
   );
 }

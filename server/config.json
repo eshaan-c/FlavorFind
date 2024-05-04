@@ -3,7 +3,7 @@
   "rds_port": "3306",
   "rds_user": "admin",
   "rds_password": "FlavorFind123",
-  "rds_db": "SWIFTIFY",
+  "rds_db": "FLAVORFIND",
   "server_host": "localhost",
   "server_port": "8080"
 }

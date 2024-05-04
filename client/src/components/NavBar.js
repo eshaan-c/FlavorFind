@@ -37,9 +37,9 @@ export default function NavBar() {
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
           <NavText href='/' text='FlavorFind' isMain />
-          <NavText href='/albums' text='Search' />
-          <NavText href='/songs' text='Restaurants' />
+          <NavText href='/top_restaurants' text='Restaurants' />
           <NavText href='/songs' text='Hotels' />
+          <NavText href='/songs' text='Search' />
         </Toolbar>
       </Container>
     </AppBar>
