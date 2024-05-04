@@ -32,7 +32,7 @@ AND FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ','))
 GROUP BY c.id
 ORDER BY num_restaurants DESC;
 
-#Query 5: Find restaurants in a city that have a specified rating and category
+#Query 5: Find restaurants in a city that are above a specified rating threshold and category
 SELECT name, rating, category, address
 FROM Restaurants
 WHERE rating > 4.5 AND category LIKE '%Italian%' AND city = 'New York'

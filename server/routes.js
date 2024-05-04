@@ -337,6 +337,74 @@ const closest_hotels = async function(req, res) {
   });
 }
 
+//Query 4: Find number of restaurants in a city
+
+const num_restaurants = async function(req, res) {
+    const city = req.params.city;
+    connection.query(`
+      SELECT c.id, c.city, c.zips, COUNT(r.id) AS num_restaurants
+      FROM Cities c
+      LEFT JOIN Restaurants r ON c.city = r.city
+      WHERE c.city = ?
+      AND FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+      GROUP BY c.id
+      ORDER BY num_restaurants DESC`, [city],
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data[0]);
+        }
+    });
+}
+
+//Query 5: Find restaurants in a city that are above a specified rating threshold and in a specific category
+
+const find_filtered_restaurants = async function(req, res) {
+    const city = req.params.city;
+    const category = req.params.category;
+    const rating = parseFloat(req.params.rating);
+
+    connection.query(`
+      SELECT name, rating, category, address
+      FROM Restaurants
+      WHERE rating > ? AND category LIKE ? AND city = ?
+      ORDER BY rating DESC`, [rating, '%' + category + '%', city],
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
+    });
+}
+
+//Query 7: Find the top restaurant in each city
+
+const top_restaurants = async function(req, res) {
+    connection.query(`
+      SELECT DISTINCT c.id, c.city AS city_name, r.address AS address, r.name AS restaurant_name, r.rating
+      FROM Cities c
+      JOIN Restaurants r ON c.city = r.city
+      WHERE (r.id, r.city, r.rating) IN (
+          SELECT r.id, r.city, MAX(rating) AS max_rating
+          FROM Restaurants r JOIN Cities c on c.city = r.city
+          WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+          GROUP BY r.city
+      ) AND FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+      ORDER BY r.rating DESC`,
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
+    });
+  }
+
 module.exports = {
   // author,
   random,
@@ -349,5 +417,8 @@ module.exports = {
   search_songs,
   find_restaurants,
   average_cuisine_rating,
-  closest_hotels
+  closest_hotels,
+  num_restaurants,
+  find_filtered_restaurants,
+  top_restaurants
 }
