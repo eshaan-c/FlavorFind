@@ -24,26 +24,28 @@ export default function RestaurantsPage() {
   return (
   <>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
-      <h2 style={{ width: '80%', margin: '0 auto', marginTop: '40px' }}>Top restaurants in popular cities:</h2>
-      {restaurants.map((restaurant) =>
-        <div
-          key={restaurant.id}
-          style={{
-            width: '80%',
-            padding: '10px',
-            margin: '10px 0',
-            border: '1px solid #000',
-            borderRadius: '5px',
-            background: '#e2c3c3'
-          }}
-        >
-          <NavLink to={`/restaurants/${restaurant.restaurant_id}`}>
-            <h4>{restaurant.city_name} - {restaurant.restaurant_name}</h4>
-          </NavLink>
-          <p>{restaurant.address}</p>
-          <p>Rating: {restaurant.rating} / 5</p>
-        </div>
-      )}
+      <h2 style={{ width: '80%', margin: '0 auto', marginTop: '30px', marginBottom: '15px', fontSize: '35px', textAlign: 'center' }}>Top restaurants in popular cities:</h2>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+        {restaurants.map((restaurant) =>
+          <div
+            key={restaurant.id}
+            style={{
+              width: '45%',
+              padding: '10px',
+              margin: '10px 2.5%',
+              border: '1px solid #000',
+              borderRadius: '5px',
+              background: '#e2c3c3'
+            }}
+          >
+            <NavLink to={`/restaurants/${restaurant.restaurant_id}`}>
+              <h4>{restaurant.city_name} - {restaurant.restaurant_name}</h4>
+            </NavLink>
+            <p>{restaurant.address}</p>
+            <p>Rating: {restaurant.rating} / 5</p>
+          </div>
+        )}
+      </div>
     </div>
     <h2 style={{ fontWeight: 'normal', fontSize: '1em', color: 'gray' }}>Developed by Eshaan Chichula, Shruthi Kunjur, Marc Vaz </h2>
   </>
