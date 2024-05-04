@@ -264,7 +264,8 @@ connection.connect((err) => err && console.log(err));
 // }
 
 const find_restaurants = async function(req, res) {
-  // given a city name, return nearby restaurants based on a distance function
+  // Query 1: given a city name, return nearby restaurants 
+  //based on a distance function
 
   const cityName = req.params.city;
 
@@ -291,7 +292,8 @@ const find_restaurants = async function(req, res) {
 }
 
 const average_cuisine_rating = async function(req, res) {
-  // given a type of cuisine, return the average rating of restaurants serving that cuisine
+  // Query 2: given a type of cuisine, return the 
+  //average rating of restaurants serving that cuisine
 
   const cuisineType = req.params.cuisine;
 
@@ -312,20 +314,14 @@ const average_cuisine_rating = async function(req, res) {
 
 
 const closest_hotels = async function(req, res) {
+  // Query 3: Find the closest hotels in a city
   const cityName = req.params.city;
 
   connection.query(`
-    SELECT DISTINCT h.name, h.rating, h.city, h.description, (
-      3959 * ACOS(
-          COS(RADIANS(c.lat)) * COS(RADIANS(h.lat)) *
-          COS(RADIANS(h.lng) - RADIANS(c.lng)) +
-          SIN(RADIANS(c.lat)) * SIN(RADIANS(h.lat))
-      )
-    ) AS distance
-    FROM Hotels h
-    JOIN Cities c ON c.city LIKE '%${cityName}%' AND h.city LIKE '%${cityName}%'
-    WHERE ABS(h.lat - c.lat) <= 0.1 AND ABS(h.lng - c.lng) <= 0.1
-    ORDER BY distance ASC;
+  SELECT DISTINCT h.name, h.rating, h.city, h.description
+  FROM Hotels h
+  JOIN Cities c ON c.city LIKE '%${cityName}%' AND h.city LIKE '%${cityName}%'
+  WHERE ABS(h.lat - c.lat) <= 0.1 AND ABS(h.lng - c.lng) <= 0.1;
   `,
   (err, data) => {
     if (err) {
@@ -338,7 +334,6 @@ const closest_hotels = async function(req, res) {
 }
 
 //Query 4: Find number of restaurants in a city
-
 const num_restaurants = async function(req, res) {
     const city = req.params.city;
     connection.query(`
@@ -354,7 +349,7 @@ const num_restaurants = async function(req, res) {
           console.log(err);
           res.json({});
         } else {
-          res.json(data[0]);
+          res.json(data);
         }
     });
 }
@@ -381,8 +376,27 @@ const find_filtered_restaurants = async function(req, res) {
     });
 }
 
-//Query 7: Find the top restaurant in each city
+//Query 6: Find the top 20 cities with the most restaurants
+const cities_with_most_restaurants = async function(req, res) {
+  connection.query(`
+  SELECT c.city, COUNT(r.id) AS num_restaurants
+  FROM Cities c
+  LEFT JOIN Restaurants r ON c.city = r.city
+  WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+  GROUP BY c.city
+  ORDER BY num_restaurants DESC
+  LIMIT 20;`, 
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.json({});
+      } else {
+        res.json(data);
+      }
+  });
+}
 
+//Query 7: Find the top restaurant in each city
 const top_restaurants = async function(req, res) {
     connection.query(`
     SELECT
@@ -422,6 +436,128 @@ const top_restaurants = async function(req, res) {
     });
   }
 
+
+  //Query 8: Find the top hotels in each city
+  const top_hotels = async function(req, res) {
+    connection.query(`
+    SELECT id, city_name, address, hotel_name, rating
+    FROM (
+        SELECT c.id, c.city AS city_name, h.address AS address, h.name AS hotel_name, h.rating,
+            ROW_NUMBER() OVER (PARTITION BY c.city ORDER BY h.rating DESC) AS row_num
+        FROM Hotels h JOIN Cities c ON h.city_name = c.city
+        WHERE FIND_IN_SET(REGEXP_SUBSTR(h.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+    ) ranked_hotels
+    WHERE row_num = 1
+    ORDER BY id
+    LIMIT 10;
+    `, 
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
+    });
+  }
+
+  //Query 9: Find restaurants based on category, rating, city, with ranges
+  const find_filtered_restaurants_range = async function(req, res) {
+    const city = req.params.city;
+    const category = req.params.category;
+    const rating1 = parseFloat(req.params.rating);
+    const rating2 = parseFloat(req.params.rating);
+
+    connection.query(`
+    SELECT r.name, r.rating, r.category
+    FROM Restaurants r
+    WHERE r.city = 'Los Angeles' AND r.category = 'Italian restaurant' AND r.rating BETWEEN 4.0 AND 4.5
+    ORDER BY r.rating DESC;`, [city, '%' + category + '%' + rating1 + '%' + rating2],
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
+    });
+  }
+
+  //Query 10: find cities with most hotels
+  const cities_with_most_hotels = async function(req, res) {
+    connection.query(`
+    SELECT id, city_name, address, hotel_name, rating
+    FROM (
+        SELECT c.id, c.city AS city_name, h.address AS address, h.name AS hotel_name, h.rating,
+            ROW_NUMBER() OVER (PARTITION BY c.city ORDER BY h.rating DESC) AS row_num
+        FROM Hotels h JOIN Cities c ON h.city_name = c.city
+        WHERE FIND_IN_SET(REGEXP_SUBSTR(h.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+    ) ranked_hotels
+    WHERE row_num = 1
+    ORDER BY id
+    LIMIT 10;
+    `, 
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
+    });
+  }
+
+  //Query 11: Find restaurants that are not in any other city
+  const unique_restaurants = async function(req, res) {
+    const city = req.params.city;
+    connection.query(`SELECT DISTINCT r.name, r.rating, r.category, r.address, c.city AS city
+    FROM Restaurants r
+    JOIN Cities c ON r.city = c.city
+    WHERE c.city = ?
+    AND r.id NOT IN (
+        SELECT r2.id
+        FROM Restaurants r2
+        JOIN Cities c2 ON r2.city = c2.city
+        WHERE c2.city <> ?
+    );`, [city, city],
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
+    });
+  }
+
+  const top_restaurants_category = async function(req, res) {
+    const category = req.params.category;
+    connection.query(`WITH CityRestaurantCounts AS (
+      SELECT c.city, r.category, COUNT(*) AS restaurant_count
+      FROM Cities c
+      JOIN Restaurants r ON r.city = c.city
+      WHERE r.category = ?
+      GROUP BY c.city, r.category
+      HAVING COUNT(*) >= 10
+  )
+  SELECT crc.city, AVG(r.rating) AS avg_rating
+  FROM CityRestaurantCounts crc
+  JOIN Restaurants r ON r.city = crc.city AND r.category = crc.category
+  GROUP BY crc.city
+  ORDER BY avg_rating DESC
+  LIMIT 10;`, [category],
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
+    });
+  }
+
+
+
   // Route: GET /restaurant/:id
   const get_rest_info = async function(req, res) {
     const restaurant_id = req.params.restaurant_id;
@@ -454,6 +590,11 @@ module.exports = {
   closest_hotels,
   num_restaurants,
   find_filtered_restaurants,
+  cities_with_most_restaurants,
   top_restaurants,
-  get_rest_info
+  top_hotels,
+  find_filtered_restaurants_range,
+  cities_with_most_hotels,
+  unique_restaurants,
+  top_restaurants_category
 }
