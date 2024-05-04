@@ -23,8 +23,8 @@ export default function RestaurantsPage() {
 
   return (
   <>
-    <h2>Top restaurants below</h2>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
+      <h2 style={{ width: '80%', margin: '0 auto', marginTop: '40px' }}>Top restaurants in popular cities:</h2>
       {restaurants.map((restaurant) =>
         <div
           key={restaurant.id}
