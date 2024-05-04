@@ -38,6 +38,15 @@ FROM Restaurants
 WHERE rating > 4.5 AND category LIKE '%Italian%' AND city = 'New York'
 ORDER BY rating DESC;
 
+#Query 6: Top 20 cities with the most restaurants
+SELECT c.city, COUNT(r.id) AS num_restaurants
+FROM Cities c
+LEFT JOIN Restaurants r ON c.city = r.city
+WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+GROUP BY c.city
+ORDER BY num_restaurants DESC
+LIMIT 20;
+
 #Query 7: Find top restaurants in each city
 SELECT DISTINCT c.id, c.city AS city_name, r.address AS address, r.name AS restaurant_name, r.rating
 FROM Cities c
@@ -49,3 +58,47 @@ WHERE (r.id, r.city, r.rating) IN (
     GROUP BY r.city
 ) AND FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
 ORDER BY r.rating DESC;
+
+#Query 8: 
+
+#Query 9: Restaurants given a certain city, rating, and category requirement
+SELECT r.name, r.rating, r.category
+FROM Restaurants r
+WHERE r.city = 'Los Angeles' AND r.category = 'Italian restaurant' AND r.rating BETWEEN 4.0 AND 4.5
+ORDER BY r.rating DESC;
+
+#Query 10: Cities with the most hotels
+SELECT c.city, COUNT(h.id) AS num_hotels
+FROM Cities c
+LEFT JOIN Hotels h ON c.city = h.city_name
+WHERE FIND_IN_SET(REGEXP_SUBSTR(h.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+GROUP BY c.city
+ORDER BY num_hotels DESC;
+
+#Query 11: Find restaurants that are not in any other city
+SELECT DISTINCT r.name, r.rating, r.category, r.address, c.city AS city
+FROM Restaurants r
+JOIN Cities c ON r.city = c.city
+WHERE c.city = 'Greenville'
+AND r.id NOT IN (
+    SELECT r2.id
+    FROM Restaurants r2
+    JOIN Cities c2 ON r2.city = c2.city
+    WHERE c2.city <> 'Greenville'
+);
+
+#Query 12: Find top 10 cities with the highest average rating in a certain category
+WITH CityRestaurantCounts AS (
+    SELECT c.city, r.category, COUNT(*) AS restaurant_count
+    FROM Cities c
+    JOIN Restaurants r ON r.city = c.city
+    WHERE r.category = 'Indian Restaurant'
+    GROUP BY c.city, r.category
+    HAVING COUNT(*) >= 10
+)
+SELECT crc.city, AVG(r.rating) AS avg_rating
+FROM CityRestaurantCounts crc
+JOIN Restaurants r ON r.city = crc.city AND r.category = crc.category
+GROUP BY crc.city
+ORDER BY avg_rating DESC
+LIMIT 10;
