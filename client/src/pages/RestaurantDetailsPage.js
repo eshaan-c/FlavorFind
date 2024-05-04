@@ -6,7 +6,7 @@ import SongCard from '../components/SongCard';
 import { formatDuration, formatReleaseDate } from '../helpers/formatter';
 const config = require('../config.json');
 
-export default function AlbumInfoPage() {
+export default function RestaurantDetailsPage() {
   const { restaurant_id } = useParams();
   const [restaurantData, setRestaurantData] = useState([]);
 
