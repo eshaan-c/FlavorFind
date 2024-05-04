@@ -420,24 +420,6 @@ const top_restaurants = async function(req, res) {
     });
   }
 
-  // GET /find_restaurant_info/:restaurant_id
-  const get_rest_info = async function(req, res) {
-    const id = req.params.restaurant_id;
-
-    connection.query(
-      'SELECT * FROM Restaurants WHERE restaurant_id = ?', [id],
-      (err, data) => {
-        if (err || data.length === 0) {
-          console.log(err);
-          res.json({});
-        } else {
-          res.json(data[0]);
-        }
-      }
-    );
-  }
-
-
 module.exports = {
   // author,
   // random,
@@ -453,6 +435,5 @@ module.exports = {
   closest_hotels,
   num_restaurants,
   find_filtered_restaurants,
-  top_restaurants,
-  get_rest_info
+  top_restaurants
 }
