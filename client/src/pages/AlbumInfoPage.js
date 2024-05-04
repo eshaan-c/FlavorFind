@@ -7,73 +7,24 @@ import { formatDuration, formatReleaseDate } from '../helpers/formatter';
 const config = require('../config.json');
 
 export default function AlbumInfoPage() {
-  const { album_id } = useParams();
-
-  const [songData, setSongData] = useState([{}]); // default should actually just be [], but empty object element added to avoid error in template code
-  const [albumData, setAlbumData] = useState([]);
-
-  const [selectedSongId, setSelectedSongId] = useState(null);
+  const { restaurant_id } = useParams();
+  const [restaurantData, setRestaurantData] = useState([]);
 
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/album/${album_id}`)
+    fetch(`http://${config.server_host}:${config.server_port}/get_rest_info/${restaurant_id}`)
       .then(res => res.json())
-      .then(resJson => setAlbumData(resJson));
+      .then(resJson => setRestaurantData(resJson));
 
-    fetch(`http://${config.server_host}:${config.server_port}/album_songs/${album_id}`)
-      .then(res => res.json())
-      .then(resJson => setSongData(resJson));
-  }, [album_id]);
+  }, [restaurant_id]);
 
   return (
-    <Container>
-      {selectedSongId && <SongCard songId={selectedSongId} handleClose={() => setSelectedSongId(null)} />}
-      <Stack direction='row' justify='center'>
-        <img
-          key={albumData.album_id}
-          src={albumData.thumbnail_url}
-          alt={`${albumData.title} album art`}
-          style={{
-            marginTop: '40px',
-            marginRight: '40px',
-            marginBottom: '40px'
-          }}
-        />
-        <Stack>
-          <h1 style={{ fontSize: 64 }}>{albumData.title}</h1>
-          <h2>Released: {formatReleaseDate(albumData.release_date)}</h2>
-        </Stack>
-      </Stack>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell key='#'>#</TableCell>
-              <TableCell key='Title'>Title</TableCell>
-              <TableCell key='Plays'>Plays</TableCell>
-              <TableCell key='Duration'>Duration</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {
-              // TODO (TASK 23): render the table content by mapping the songData array to <TableRow> elements
-              // Hint: the skeleton code for the very first row is provided for you. Fill out the missing information and then use a map function to render the rest of the rows.
-              // Hint: it may be useful to refer back to LazyTable.js
-              songData.map((song, idx) => (
-                <TableRow key={song.song_id}>
-                  <TableCell>{idx + 1}</TableCell>
-                  <TableCell>
-                    <Link onClick={() => setSelectedSongId(song.song_id)}>
-                      {song.title}
-                    </Link>
-                  </TableCell>
-                  <TableCell>{song.plays}</TableCell>
-                  <TableCell>{formatDuration(song.duration)}</TableCell>
-                </TableRow>
-              ))
-            }
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Container>
-  );
+  <div>
+    <h2>Restaurant Information for ID: {restaurant_id}</h2>
+    <p>Name: {restaurantData.name}</p>
+    <p>Phone: {restaurantData.phone}</p>
+    <p>Website: {restaurantData.website}</p>
+    <p>Address: {restaurantData.address}</p>
+    <p>Category: {restaurantData.category}</p>
+  </div>
+);
 }

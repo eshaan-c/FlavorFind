@@ -37,7 +37,9 @@ export default function RestaurantsPage() {
             background: '#e2c3c3'
           }}
         >
-          <h4>{restaurant.city_name} - {restaurant.restaurant_name}</h4>
+          <NavLink to={`/restaurants/${restaurant.restaurant_id}`}>
+            <h4>{restaurant.city_name} - {restaurant.restaurant_name}</h4>
+          </NavLink>
           <p>{restaurant.address}</p>
           <p>Rating: {restaurant.rating} / 5</p>
         </div>
