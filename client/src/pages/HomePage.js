@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Divider, Link } from '@mui/material';
+import { Box, Button, Container, Typography, Paper, Divider, Link } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 import LazyTable from '../components/LazyTable';
@@ -69,20 +69,33 @@ export default function HomePage() {
   ]
 
   return (
-    <Container>
-      {/* SongCard is a custom component that we made. selectedSongId && <SongCard .../> makes use of short-circuit logic to only render the SongCard if a non-null song is selected */}
-      {selectedSongId && <SongCard songId={selectedSongId} handleClose={() => setSelectedSongId(null)} />}
-      <h2>Welcome to FlavorFind! Find the best restaurants based on your desired location/cuisine </h2>
-      <Divider />
-      <h2>Restaurants</h2>
-      <LazyTable route={`http://${config.server_host}:${config.server_port}/top_songs`} columns={songColumns} />
-      <Divider />
-      {/* TODO (TASK 16): add a h2 heading, LazyTable, and divider for top albums. Set the LazyTable's props for defaultPageSize to 5 and rowsPerPageOptions to [5, 10] */}
-      {/* TODO (TASK 17): add a paragraph (<p></p>) that displays “Created by [name]” using the name state stored from TASK 13/TASK 14 */}
-      <h2>Hotels</h2>
-      <LazyTable route={`http://${config.server_host}:${config.server_port}/top_albums`} columns={albumColumns} defaultPageSize={5} rowsPerPageOptions={[5, 10]} />
-      <Divider />
-      <h2 style={{ fontWeight: 'normal', fontSize: '1em', color: 'gray' }}>Developed by Eshaan Chichula, Shruthi Kunjur, Marc Vaz </h2>
+    <Container maxWidth="lg">
+      <Box sx={{ bgcolor: '#f3c9c1', height: '40vh', py: 8 }}>
+        <Typography variant="h2" align="center" gutterBottom>
+          Welcome to FlavorFind!
+        </Typography>
+        <Typography variant="h5" align="center" gutterBottom>
+          Find the best restaurants and hotels based on your desired location and cuisine.
+        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
+        </Box>
+      </Box>
+      <Paper elevation={3} sx={{ my: 4, p: 2 }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Why FlavorFind?
+        </Typography>
+        <Typography variant="body1" align="center" gutterBottom>
+          FlavorFind uses advanced algorithms to recommend the best restaurants and hotels for you. Whether you're planning a trip or just looking for a new place to eat, FlavorFind can help you find the perfect place.
+        </Typography>
+      </Paper>
+      <Paper elevation={3} sx={{ my: 4, p: 2 }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Restaurant of the Day
+        </Typography>
+        <Typography variant="body1" align="center" gutterBottom>
+          Check back every day for a new restaurant recommendation!
+        </Typography>
+      </Paper>
     </Container>
   );
 };
