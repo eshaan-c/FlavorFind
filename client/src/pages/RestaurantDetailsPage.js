@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Card, CardContent, Typography } from '@mui/material';
 import { Container, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 import SongCard from '../components/SongCard';
@@ -18,13 +19,27 @@ export default function RestaurantDetailsPage() {
   }, [restaurant_id]);
 
   return (
-  <div>
-    <h2>Restaurant Information for ID: {restaurant_id}</h2>
-    <p>Name: {restaurantData.name}</p>
-    <p>Phone: {restaurantData.phone}</p>
-    <p>Website: {restaurantData.website}</p>
-    <p>Address: {restaurantData.address}</p>
-    <p>Category: {restaurantData.category}</p>
-  </div>
+  <Card style={{ maxWidth: 800, margin: '20px auto', backgroundColor: '#f5a7a7' }}>
+    <CardContent>
+      <Typography variant="h5" color="text.secondary" component="div">
+        Restaurant Information for ID: {restaurant_id}
+      </Typography>
+      <Typography variant="h4" color="text.primary" style={{ fontWeight: 'bold' }}>
+        {restaurantData.name}
+      </Typography>
+      <Typography variant="h6">
+        Phone: {restaurantData.phone}
+      </Typography>
+      <Typography variant="h6">
+        Website: <a href={restaurantData.website} style={{ color: '#FFFFFF' }}>{restaurantData.website}</a>
+      </Typography>
+      <Typography variant="h6">
+        Address: {restaurantData.address}
+      </Typography>
+      <Typography variant="h6">
+        Category: {restaurantData.category}
+      </Typography>
+    </CardContent>
+  </Card>
 );
 }
