@@ -22,22 +22,28 @@ export default function RestaurantsPage() {
   const format4 = { display: 'grid', justifyContent: 'space-evenly' };
 
   return (
-    <>
-      <h2>Top restaurants below</h2>
-      <Container style={format3}>
-        {restaurants.map((restaurant) =>
-          <Box
-            key={restaurant.id}
-            p={3}
-            m={2}
-            style={{ background: '#c5cae9', borderRadius: '16px', border: '2px solid #000' }}
-          >
-            <h4>{restaurant.city_name} - {restaurant.restaurant_name}</h4>
-            <p>{restaurant.address}</p>
-            <p>Rating: {restaurant.rating} / 5</p>
-          </Box>
-        )}
-      </Container>
-    </>
-  );
+  <>
+    <h2>Top restaurants below</h2>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
+      {restaurants.map((restaurant) =>
+        <div
+          key={restaurant.id}
+          style={{
+            width: '80%',
+            padding: '10px',
+            margin: '10px 0',
+            border: '1px solid #000',
+            borderRadius: '5px',
+            background: '#e2c3c3'
+          }}
+        >
+          <h4>{restaurant.city_name} - {restaurant.restaurant_name}</h4>
+          <p>{restaurant.address}</p>
+          <p>Rating: {restaurant.rating} / 5</p>
+        </div>
+      )}
+    </div>
+    <h2 style={{ fontWeight: 'normal', fontSize: '1em', color: 'gray' }}>Developed by Eshaan Chichula, Shruthi Kunjur, Marc Vaz </h2>
+  </>
+);
 }
