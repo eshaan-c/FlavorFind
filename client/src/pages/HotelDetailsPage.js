@@ -19,27 +19,31 @@ export default function HotelDetailsPage() {
   }, [hotel_id]);
 
   return (
-  <Card style={{ maxWidth: 800, margin: '20px auto', backgroundColor: '#f5a7a7' }}>
-    <CardContent>
-      <Typography variant="h5" color="text.secondary" component="div">
-        Hotel Information for ID: {hotel_id}
-      </Typography>
-      <Typography variant="h4" color="text.primary" style={{ fontWeight: 'bold' }}>
-        {hotelData.name}
-      </Typography>
-      <Typography variant="h6">
-        Phone: {hotelData.phone}
-      </Typography>
-      <Typography variant="h6">
-        Website: <a href={hotelData.website} style={{ color: '#FFFFFF' }}>{hotelData.website}</a>
-      </Typography>
-      <Typography variant="h6">
-        Address: {hotelData.address}
-      </Typography>
-      <Typography variant="h6">
-        Category: {hotelData.category}
-      </Typography>
-    </CardContent>
-  </Card>
-);
+    <Card style={{ maxWidth: 800, margin: '20px auto', backgroundColor: '#c3d4e2' }}>
+      <CardContent>
+        <Typography variant="h4" color="text.primary" style={{ fontWeight: 'bold', fontFamily: 'Georgia, serif' }}>
+          {hotelData.name}
+        </Typography>
+        <Typography variant="h6" style={{ fontFamily: 'Georgia, serif' }}>
+          Website: <a href={hotelData.website} style={{ color: '#FFFFFF' }}>{hotelData.website}</a>
+        </Typography>
+        <Typography variant="h6" style={{ fontFamily: 'Georgia, serif' }}>
+          Rating: {hotelData.rating}
+        </Typography>
+        <Typography variant="h6" style={{ fontFamily: 'Georgia, serif' }}>
+          Address: {hotelData.address}
+        </Typography>
+        {hotelData.attractions && (
+          <Typography variant="h6" style={{ fontFamily: 'Georgia, serif' }}>
+            Attractions: <div dangerouslySetInnerHTML={{ __html: hotelData.attractions }} />
+          </Typography>
+        )}
+        {hotelData.description && (
+          <Typography variant="h6" style={{ fontFamily: 'Georgia, serif' }}>
+            Description: <div dangerouslySetInnerHTML={{ __html: hotelData.description }} />
+          </Typography>
+        )}
+      </CardContent>
+    </Card>
+  );
 }

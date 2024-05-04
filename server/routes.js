@@ -425,15 +425,15 @@ const top_restaurants = async function(req, res) {
    //Query 8: Find the top hotels in each city
  const top_hotels = async function(req, res) {
   connection.query(`
-  SELECT id, city_name, address, hotel_name, rating
+  SELECT city_id, hotel_id, city_name, address, hotel_name, rating
   FROM (
-      SELECT c.id, c.city AS city_name, h.address AS address, h.name AS hotel_name, h.rating,
+      SELECT c.id AS city_id, c.city AS city_name, h.id AS hotel_id, h.address AS address, h.name AS hotel_name, h.rating,
           ROW_NUMBER() OVER (PARTITION BY c.city ORDER BY h.rating DESC) AS row_num
       FROM Hotels h JOIN Cities c ON h.city_name = c.city
       WHERE FIND_IN_SET(REGEXP_SUBSTR(h.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
   ) ranked_hotels
   WHERE row_num = 1
-  ORDER BY id
+  ORDER BY city_id
   LIMIT 10;
   `,
     (err, data) => {
@@ -463,6 +463,25 @@ const top_restaurants = async function(req, res) {
     );
   };
 
+  // Route: GET /restaurant/:id
+  const get_hotel_info = async function(req, res) {
+    const hotel_id = req.params.hotel_id;
+    connection.query(
+      'SELECT * FROM Hotels WHERE id = ?',
+      [hotel_id],
+      (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data[0]);
+        }
+      }
+    );
+  };
+
+
+
 module.exports = {
   // author,
   // random,
@@ -480,5 +499,6 @@ module.exports = {
   find_filtered_restaurants,
   top_restaurants,
   get_rest_info,
+  get_hotel_info,
   top_hotels
 }

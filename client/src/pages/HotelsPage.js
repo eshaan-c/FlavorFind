@@ -35,7 +35,7 @@ export default function HotelsPage() {
               background: '#c3d4e2'
             }}
           >
-          <NavLink to={`/hotels/${hotel.id}`}>
+          <NavLink to={`/hotels/${hotel.hotel_id}`}>
             <h4>{hotel.city_name} - {hotel.hotel_name}</h4>
           </NavLink>
           <p>{hotel.address.split(/(?=[A-Z])/).join(' ')}</p>

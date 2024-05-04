@@ -26,6 +26,7 @@ app.get('/find_filtered_restaurants/:city/:category/:rating', routes.find_filter
 app.get('/top_restaurants', routes.top_restaurants);
 app.get('/top_hotels', routes.top_hotels);
 app.get('/get_rest_info/:restaurant_id', routes.get_rest_info);
+app.get('/get_hotel_info/:hotel_id', routes.get_hotel_info);
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
