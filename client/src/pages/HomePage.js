@@ -72,9 +72,7 @@ export default function HomePage() {
     <Container>
       {/* SongCard is a custom component that we made. selectedSongId && <SongCard .../> makes use of short-circuit logic to only render the SongCard if a non-null song is selected */}
       {selectedSongId && <SongCard songId={selectedSongId} handleClose={() => setSelectedSongId(null)} />}
-      <h2>Welcome to FlavorFind! Find the best restaurants based on your desired location/cuisine &nbsp;
-        <Link onClick={() => setSelectedSongId(songOfTheDay.song_id)}>{songOfTheDay.title}</Link>
-      </h2>
+      <h2>Welcome to FlavorFind! Find the best restaurants based on your desired location/cuisine </h2>
       <Divider />
       <h2>Restaurants</h2>
       <LazyTable route={`http://${config.server_host}:${config.server_port}/top_songs`} columns={songColumns} />
@@ -84,7 +82,7 @@ export default function HomePage() {
       <h2>Hotels</h2>
       <LazyTable route={`http://${config.server_host}:${config.server_port}/top_albums`} columns={albumColumns} defaultPageSize={5} rowsPerPageOptions={[5, 10]} />
       <Divider />
-      <p>{appAuthor}</p>
+      <h2 style={{ fontWeight: 'normal', fontSize: '1em', color: 'gray' }}>Developed by Eshaan Chichula, Shruthi Kunjur, Marc Vaz </h2>
     </Container>
   );
 };

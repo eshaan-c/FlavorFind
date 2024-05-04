@@ -34,8 +34,7 @@ export default function AlbumsPage() {
           >
             <h4>{restaurant.restaurant_name}</h4>
             <p>{restaurant.address}</p>
-            <p>{restaurant.city_name}</p>
-            <p>Rating: {restaurant.rating}</p>
+            <p>Rating: {restaurant.rating} / 5</p>
           </Box>
         )}
       </Container>
