@@ -31,7 +31,7 @@ export default function RestaurantDetailsPage() {
         Phone: {restaurantData.phone}
       </Typography>
       <Typography variant="h6">
-        Website: <a href={restaurantData.website} style={{ color: '#FFFFFF' }}>{restaurantData.website}</a>
+        Website: <a href={restaurantData.website} style={{ color: '#3614bb' }}>{restaurantData.website}</a>
       </Typography>
       <Typography variant="h6">
         Address: {restaurantData.address}

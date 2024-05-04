@@ -25,7 +25,7 @@ export default function HotelDetailsPage() {
           {hotelData.name}
         </Typography>
         <Typography variant="h6" style={{ fontFamily: 'Georgia, serif' }}>
-          Website: <a href={hotelData.website} style={{ color: '#FFFFFF' }}>{hotelData.website}</a>
+          Website: <a href={hotelData.website} style={{ color: '#3614bb' }}>{hotelData.website}</a>
         </Typography>
         <Typography variant="h6" style={{ fontFamily: 'Georgia, serif' }}>
           Rating: {hotelData.rating}
