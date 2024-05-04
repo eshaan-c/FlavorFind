@@ -130,3 +130,27 @@ JOIN Restaurants r ON r.city = crc.city AND r.category = crc.category
 GROUP BY crc.city
 ORDER BY avg_rating DESC
 LIMIT 10;
+
+
+#Displays top 10 restaurants in Philadelphia
+SELECT DISTINCT id, name, address, rating
+FROM Restaurants
+WHERE city = 'Philadelphia'
+ORDER BY rating DESC
+LIMIT 10;
+
+#Displays a random list of top 20 restaurants around the US
+SELECT r.name, r.rating, r.address
+FROM Restaurants r
+WHERE r.rating = 5.00
+ORDER BY RAND()
+LIMIT 20;
+
+#Find all cities with no restaurants in them
+SELECT *
+FROM Cities c
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM Restaurants r
+    WHERE r.city = c.city
+)
