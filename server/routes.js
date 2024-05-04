@@ -558,6 +558,23 @@ const top_restaurants = async function(req, res) {
 
 
 
+  // Route: GET /restaurant/:id
+  const get_rest_info = async function(req, res) {
+    const restaurant_id = req.params.restaurant_id;
+    connection.query(
+      'SELECT * FROM Restaurants WHERE id = ?',
+      [restaurant_id],
+      (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data[0]);
+        }
+      }
+    );
+  };
+
 module.exports = {
   // author,
   // random,
