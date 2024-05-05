@@ -89,9 +89,16 @@ const closest_hotels = async function(req, res) {
 const num_restaurants = async function(req, res) {
     const zip = req.params.zip;
     connection.query(`
-    SELECT COUNT(*) AS num_restaurants
-    FROM Restaurants
-    WHERE REGEXP_SUBSTR(address, '[0-9]{5}') = ?`, [zip],
+    WITH CityFromZip AS (
+      SELECT city, zips
+      FROM Cities
+      WHERE FIND_IN_SET(?, REPLACE(zips, ' ', ',')) > 0
+      )
+      SELECT c.city, COUNT(*) AS num_restaurants
+      FROM Restaurants r
+      JOIN CityFromZip c ON r.city = c.city
+      WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+      GROUP BY c.city;`, [zip],
       (err, data) => {
         if (err) {
           console.log(err);
@@ -123,6 +130,28 @@ const find_filtered_restaurants = async function(req, res) {
         res.json(data);
       }
     });
+}
+
+//Query 6: Find hotels in a city that are above a specified rating threshold
+
+const find_filtered_hotels = async function(req, res) {
+  const city = req.params.city;
+  const rating = parseFloat(req.params.rating);
+
+  connection.query(`
+    SELECT MIN(id) AS id, name, rating, address
+    FROM Hotels
+    WHERE rating >= ? AND city_name = ?
+    GROUP BY name, rating, address
+    ORDER BY rating DESC`, [rating, city],
+    (err, data) => {
+    if (err) {
+      console.log(err);
+      res.json({});
+    } else {
+      res.json(data);
+    }
+  });
 }
 
 //Query 7: Find the top restaurant in each city
@@ -286,5 +315,6 @@ module.exports = {
   get_hotel_info,
   top_hotels,
   random,
-  top_restaurants_city
+  top_restaurants_city,
+  find_filtered_hotels
 }
