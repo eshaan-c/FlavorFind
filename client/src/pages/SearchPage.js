@@ -16,14 +16,18 @@ export default function SearchPage() {
   const [category, setCategory] = useState('');
   const [rating, setRating] = useState(0);
 
-  const search = () => {
-    fetch(`http://${config.server_host}:${config.server_port}/find_filtered_restaurants/${city}/${category}/${rating}`)
-      .then(res => res.json())
-      .then(resJson => {
-        const restaurantsWithId = resJson.map((restaurant, index) => ({ id: index, ...restaurant }));
-        setData(restaurantsWithId);
-      });
-  }
+const search = () => {
+    const searchCategory = category || ' ';
+    const searchCity = city || ' ';
+    const searchRating = rating || 0;
+    
+    fetch(`http://${config.server_host}:${config.server_port}/find_filtered_restaurants/${searchCity}/${searchCategory}/${searchRating}`)
+        .then(res => res.json())
+        .then(resJson => {
+            const restaurantsWithId = resJson.map((restaurant, index) => ({ id: index, ...restaurant }));
+            setData(restaurantsWithId);
+        });
+}
 
   const togglePage = () => {
     if (window.location.pathname === '/search') {

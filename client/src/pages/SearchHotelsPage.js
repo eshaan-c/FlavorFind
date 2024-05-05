@@ -15,7 +15,9 @@ export default function SearchHotelsPage() {
   const [rating, setRating] = useState(0);
 
   const search = () => {
-    fetch(`http://${config.server_host}:${config.server_port}/find_filtered_hotels/${city}/${rating}`)
+    const searchCity = city || ' ';
+    const searchRating = rating || 0;
+    fetch(`http://${config.server_host}:${config.server_port}/find_filtered_hotels/${searchCity}/${searchRating}`)
       .then(res => res.json())
       .then(resJson => {
         const hotelsWithId = resJson.map((hotel, index) => ({ id: index, ...hotel }));
