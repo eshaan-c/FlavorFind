@@ -240,3 +240,40 @@ LIMIT 5;
 SELECT COUNT(*)
 FROM Restaurants
 WHERE REGEXP_SUBSTR(address, '[0-9]{5}') = ?
+
+#Query 21: Given a zip, finds number of restaurants in all zips for that city
+WITH CityFromZip AS (
+    SELECT city, zips
+    FROM Cities
+    WHERE FIND_IN_SET(?, REPLACE(zips, ' ', ',')) > 0
+)
+SELECT c.city, COUNT(*) AS num_restaurants
+FROM Restaurants r
+JOIN CityFromZip c ON r.city = c.city
+WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+GROUP BY c.city;
+
+#Another query
+SELECT MIN(id), name, rating, address
+    FROM Hotels
+    WHERE rating >= ? AND city_name = ?
+    GROUP BY name, rating, address
+    ORDER BY rating DESC;
+
+#Find top 5 highly rated cuisines in the city that you give a zipcode for
+WITH CityFromZip AS (
+    SELECT city, zips
+    FROM Cities
+    WHERE FIND_IN_SET(?, REPLACE(zips, ' ', ',')) > 0
+),
+TopCategories AS (
+    SELECT category,
+           AVG(rating) AS average_rating
+    FROM Restaurants r
+    JOIN CityFromZip c ON r.city = c.city
+    WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+    GROUP BY category
+    ORDER BY average_rating DESC
+    LIMIT 5
+)
+SELECT * FROM TopCategories;
