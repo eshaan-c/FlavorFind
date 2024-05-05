@@ -220,9 +220,18 @@ WHERE row_num <= 10
 GROUP BY city, category
 ORDER BY city, row_num;
 
-#Query 19: Top 10 restaurants per city
+#Query 19: Top 10 restaurants given a city
 SELECT c.city, r.name, r.address, r.rating, r.id
 FROM Restaurants r JOIN Cities c ON r.city = c.city
 WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0 AND c.id = ?
 ORDER BY r.rating DESC
 LIMIT 10;
+
+#Query 20: Top 5 rated cuisines in a zipcode
+SELECT category,
+       AVG(rating) AS average_rating
+FROM Restaurants
+WHERE REGEXP_SUBSTR(address, '[0-9]{5}') = ?
+GROUP BY category
+ORDER BY average_rating DESC
+LIMIT 5;
