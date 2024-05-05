@@ -48,13 +48,13 @@ export default function HotelDetailsPage() {
               {hotelData.name}
             </Typography>
             <Typography variant="h6" style={{ color: '#333', fontFamily: '-apple-system, BlinkMacSystemFont, "San Francisco", Helvetica, Arial, sans-serif', marginBottom: '10px' }}>
-              <strong>Website:</strong> <a href={hotelData.website} style={{ color: '#007aff' }}>{hotelData.website}</a>
+              <strong>Website:</strong> <a href={hotelData.website} style={{ color: '#007aff', wordWrap: 'break-word' }}>{hotelData.website}</a>
             </Typography>
             <Typography variant="h6" style={{ color: '#333', fontFamily: '-apple-system, BlinkMacSystemFont, "San Francisco", Helvetica, Arial, sans-serif', marginBottom: '10px' }}>
               <strong>Rating:</strong> {hotelData.rating}
             </Typography>
             <Typography variant="h6" style={{ color: '#333', fontFamily: '-apple-system, BlinkMacSystemFont, "San Francisco", Helvetica, Arial, sans-serif', marginBottom: '10px' }}>
-              <strong>Address:</strong> {hotelData.address.split(/(?=[A-Z])/).join(' ')}
+              <strong>Address:</strong> <a style={{wordWrap: 'break-word' }}>{hotelData.address.split(/(?=[A-Z])/).join(' ')}</a>
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
