@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 const config = require('../config.json');
 
-export default function RestaurantsPage() {
+export default function TopRestaurantsPage() {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -50,7 +50,7 @@ export default function RestaurantsPage() {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
         <div style={{ width: '80%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '30px', marginBottom: '15px' }}>
           <div>
-            <h2 style={{ margin: '0', fontSize: '35px' }}>Top restaurants in popular cities:</h2>
+            <h2 style={{ margin: '0', fontSize: '35px' }}>Top restaurants in (city name)</h2>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               {cities.map((city, index) => (
                 <NavLink key={index} to={`/toprestaurants/${city.id}`} style={{ fontSize: '16px' }}>{city.name}</NavLink>
