@@ -328,15 +328,6 @@ const top_restaurants = async function(req, res) {
 
 
 module.exports = {
-  // author,
-  // random,
-  // song,
-  // album,
-  // albums,
-  // album_songs,
-  // top_songs,
-  // top_albums,
-  // search_songs,
   find_restaurants,
   average_cuisine_rating,
   closest_hotels,
