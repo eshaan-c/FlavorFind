@@ -294,6 +294,38 @@ const top_restaurants = async function(req, res) {
       });
   }
 
+  //Route: GET /topcuisines/:zip
+
+  const top_cuisines = async function(req, res) {
+    const zip = req.params.zip;
+    connection.query(`
+    WITH CityFromZip AS (
+      SELECT city, zips
+      FROM Cities
+      WHERE FIND_IN_SET(?, REPLACE(zips, ' ', ',')) > 0
+      ),
+      TopCategories AS (
+          SELECT category,
+                AVG(rating) AS average_rating
+          FROM Restaurants r
+          JOIN CityFromZip c ON r.city = c.city
+          WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+          GROUP BY category
+          ORDER BY average_rating DESC
+          LIMIT 5
+      )
+      SELECT * FROM TopCategories;`, [zip],
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
+      });
+  }
+
+
 
 module.exports = {
   // author,
@@ -316,5 +348,6 @@ module.exports = {
   top_hotels,
   random,
   top_restaurants_city,
-  find_filtered_hotels
+  find_filtered_hotels,
+  top_cuisines
 }
