@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Container, Typography, Paper, Divider, Link } from '@mui/material';
+import { Box, Button, Container, Typography, Paper, Divider, Card, CardMedia, Grid } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 
@@ -38,6 +38,35 @@ export default function HomePage() {
           FlavorFind uses advanced algorithms to recommend the best restaurants and hotels for you. Whether you're planning a trip or just looking for somewhere new to eat, FlavorFind can help you find the perfect place.
         </Typography>
       </Paper>
+      <Grid container spacing={3}>
+      <Grid item xs={12} md={6}>
+        <Card>
+          <CardMedia
+            component="img"
+            height="140"
+            image="https://media.architecturaldigest.com/photos/572a34ffe50e09d42bdfb5e0/master/pass/japanese-restaurants-la-01.jpg"
+            alt="Find Restaurants"
+          />
+          <Typography variant="h4" align="center" gutterBottom>
+            Find Restaurants
+          </Typography>
+        </Card>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <Card>
+          <CardMedia
+            component="img"
+            height="140"
+            image="https://i.pinimg.com/originals/20/07/d6/2007d6dd4ca8f4b527d19c7baaefab7e.jpg"
+            alt="Find Hotels"
+          />
+          <Typography variant="h4" align="center" gutterBottom>
+            Find Hotels
+          </Typography>
+        </Card>
+      </Grid>
+    </Grid>
+
       <Paper elevation={3} sx={{ my: 4, p: 2 }}>
       <Typography variant="h4" align="center" gutterBottom>
         Random Restaurant Recommendation
