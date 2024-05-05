@@ -367,9 +367,9 @@ const find_filtered_restaurants = async function(req, res) {
     const rating = parseFloat(req.params.rating);
 
     connection.query(`
-      SELECT name, rating, category, address
+      SELECT DISTINCT name, rating, category, address
       FROM Restaurants
-      WHERE rating > ? AND category LIKE ? AND city = ?
+      WHERE rating >= ? AND category LIKE ? AND city = ?
       ORDER BY rating DESC`, [rating, '%' + category + '%', city],
       (err, data) => {
         if (err) {

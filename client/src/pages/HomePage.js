@@ -35,7 +35,7 @@ export default function HomePage() {
           Why FlavorFind?
         </Typography>
         <Typography variant="body1" align="center" gutterBottom>
-          FlavorFind uses advanced algorithms to recommend the best restaurants and hotels for you. Whether you're planning a trip or just looking for a new place to eat, FlavorFind can help you find the perfect place.
+          FlavorFind uses advanced algorithms to recommend the best restaurants and hotels for you. Whether you're planning a trip or just looking for somewhere new to eat, FlavorFind can help you find the perfect place.
         </Typography>
       </Paper>
       <Paper elevation={3} sx={{ my: 4, p: 2 }}>
