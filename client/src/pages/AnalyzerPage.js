@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Container, Grid, TextField, Typography, Paper } from '@mui/material';
+import { Button, Container, Grid, TextField, Typography, Paper, CircularProgress } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 
@@ -11,15 +11,26 @@ export default function AnalyzerPage() {
 
   const [zip, setZip] = useState('');
   const [topCuisines, setTopCuisines] = useState([]);
+  const [loadingRestaurants, setLoadingRestaurants] = useState(false);
+  const [loadingCuisines, setLoadingCuisines] = useState(false);
+
 
   const search = () => {
+    setLoadingRestaurants(true);
     fetch(`http://${config.server_host}:${config.server_port}/num_restaurants/${zip}`)
       .then(res => res.json())
-      .then(resJson => setData(resJson));
-  
+      .then(resJson => {
+        setData(resJson);
+        setLoadingRestaurants(false);
+      });
+
+    setLoadingCuisines(true);
     fetch(`http://${config.server_host}:${config.server_port}/top_cuisines/${zip}`)
       .then(res => res.json())
-      .then(resJson => setTopCuisines(resJson));
+      .then(resJson => {
+        setTopCuisines(resJson);
+        setLoadingCuisines(false);
+      });
   }
 
   return (
@@ -42,8 +53,12 @@ export default function AnalyzerPage() {
           </Grid>
         </Grid>
       </form>
-      <Typography variant="h3" style={{ marginTop: '30px', color: '#000000' }}>Number of Restaurants: {data.num_restaurants}</Typography>
-      <Typography variant="h6" style={{ marginTop: '20px', color: '#000000' }}>Top Cuisines:</Typography>
+      <Typography variant="h3" style={{ marginTop: '30px', color: '#000000' }}>
+        Number of Restaurants: {loadingRestaurants ? <CircularProgress size={24} /> : data.num_restaurants}
+      </Typography>
+      <Typography variant="h6" style={{ marginTop: '20px', color: '#000000' }}>
+        Top Cuisines: {loadingCuisines ? <CircularProgress size={24} /> : ''}
+      </Typography>
       <ul>
         {topCuisines.map((cuisine, index) => (
           <li key={index} style={{ fontSize: '18px', color: '#000000' }}>{cuisine.category}: {cuisine.average_rating}</li>
