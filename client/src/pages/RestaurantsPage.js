@@ -35,7 +35,10 @@ export default function RestaurantsPage() {
   return (
   <>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
-      <h2 style={{ width: '80%', margin: '0 auto', marginTop: '30px', marginBottom: '15px', fontSize: '35px', textAlign: 'center' }}>Top restaurants in popular cities:</h2>
+      <div style={{ width: '80%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '30px', marginBottom: '15px' }}>
+        <h2 style={{ margin: '0', fontSize: '35px' }}>Top restaurants in popular cities:</h2>
+        <NavLink to="/analyzer" style={{ fontSize: '24px' }}>City Restaurant Analyzer</NavLink>
+      </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
         {restaurants.map((restaurant) =>
           <div
