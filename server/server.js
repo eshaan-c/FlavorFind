@@ -21,7 +21,7 @@ app.use(cors({
 app.get('/find_restaurants/:cityName', routes.find_restaurants);
 app.get('/cuisine_rating/:cuisine', routes.average_cuisine_rating);
 app.get('/closest_hotels/:city', routes.closest_hotels);
-app.get('/num_restaurants/:city', routes.num_restaurants);
+app.get('/num_restaurants/:zip', routes.num_restaurants);
 app.get('/find_filtered_restaurants/:city/:category/:rating', routes.find_filtered_restaurants);
 app.get('/top_restaurants', routes.top_restaurants);
 app.get('/top_hotels', routes.top_hotels);
