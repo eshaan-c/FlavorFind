@@ -90,6 +90,9 @@ export default function HomePage() {
         {rand.address}
       </Typography>
     </Paper>
+    <Typography variant="body1" align="left" color="text.secondary" style={{ marginBottom: '20px' }}>
+      Developed by Eshaan Chichula, Shruthi Kunjur, Marc Vaz
+    </Typography>
     </Container>
   );
 };
