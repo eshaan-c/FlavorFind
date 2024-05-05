@@ -43,7 +43,13 @@ export default function SearchHotelsPage() {
       )
   },
     { field: 'rating', headerName: 'Rating' },
-    { field: 'address', headerName: 'Address' },
+    { 
+      field: 'address', 
+      headerName: 'Address',
+      renderCell: (params) => (
+        <p style={{ margin: '0' }}>{params.value.split(/(?=[A-Z])/).join(' ')}</p>
+      )
+    },
   ]
 
   return (
@@ -70,7 +76,12 @@ export default function SearchHotelsPage() {
           <TextField label='Minimum Rating' value={rating} onChange={(e) => setRating(e.target.value)} style={{ width: "100%" }}/>
         </Grid>
       </Grid>
-      <Button onClick={() => search() } style={{ left: '50%', transform: 'translateX(-50%)' }}>
+      <Button 
+        variant="contained" 
+        color="inherit" 
+        onClick={() => search()} 
+        style={{ left: '50%', transform: 'translateX(-50%)', marginTop: '5mm'  }}
+      >
         Search
       </Button>
       <h2>Results</h2>
