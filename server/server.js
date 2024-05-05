@@ -18,7 +18,7 @@ app.use(cors({
 // app.get('/top_songs', routes.top_songs);
 // app.get('/top_albums', routes.top_albums);
 // app.get('/search_songs', routes.search_songs);
-app.get('/find_restaurants/:cityName', routes.find_restaurants);
+app.get('/find_restaurants/:hotel_id', routes.find_restaurants);
 app.get('/cuisine_rating/:cuisine', routes.average_cuisine_rating);
 app.get('/closest_hotels/:city', routes.closest_hotels);
 app.get('/num_restaurants/:zip', routes.num_restaurants);
@@ -30,7 +30,6 @@ app.get('/get_hotel_info/:hotel_id', routes.get_hotel_info);
 app.get('/random', routes.random);
 app.get('/top_restaurants_city/:city_id', routes.top_restaurants_city);
 app.get('/find_filtered_hotels/:city/:rating', routes.find_filtered_hotels);
-app.get('/top_cuisines/:zip', routes.top_cuisines);
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)

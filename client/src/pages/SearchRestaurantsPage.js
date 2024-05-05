@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 const config = require('../config.json');
 
-export default function SearchPage() {
+export default function SearchRestaurantsPage() {
   const [pageSize, setPageSize] = useState(10);
   const [data, setData] = useState([]);
   const navigate = useNavigate();
