@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Container, CircularProgress  } from '@mui/material';
+import { Box, Container, CircularProgress, Button  } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 const config = require('../config.json');
@@ -65,7 +65,9 @@ export default function RestaurantsPage() {
             ))}
           </div>
         </div>
-        <NavLink to="/analyzer" style={{ fontSize: '24px' }}>City Restaurant Analyzer</NavLink>
+      <Button variant="contained" style={{ backgroundColor: 'salmon' }}>
+        <NavLink to="/analyzer" style={{ fontSize: '20px', color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>City Restaurant Analyzer</NavLink>
+      </Button>
       </div>
       <div style={format3}>
         {restaurants.map((restaurant) =>
