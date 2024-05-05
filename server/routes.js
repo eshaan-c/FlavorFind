@@ -121,7 +121,7 @@ const find_filtered_restaurants = async function(req, res) {
       FROM Restaurants2
       WHERE rating >= ? AND category LIKE ? AND city LIKE ?
       GROUP BY name, rating, category, address
-      ORDER BY rating DESC`, [rating, '%' + category + '%', '%' + city + '%'],
+      ORDER BY rating DESC`, [rating, '%' + category + '%',  city],
       (err, data) => {
       if (err) {
         console.log(err);
@@ -143,7 +143,7 @@ const find_filtered_hotels = async function(req, res) {
     FROM Hotels
     WHERE rating >= ? AND city_name LIKE ?
     GROUP BY name, rating, address
-    ORDER BY rating DESC`, [rating, '%' + city + '%'],
+    ORDER BY rating DESC`, [rating, city],
     (err, data) => {
     if (err) {
       console.log(err);
