@@ -28,6 +28,7 @@ app.get('/top_hotels', routes.top_hotels);
 app.get('/get_rest_info/:restaurant_id', routes.get_rest_info);
 app.get('/get_hotel_info/:hotel_id', routes.get_hotel_info);
 app.get('/random', routes.random);
+app.get('/top_restaurants_city/:city_id', routes.top_restaurants_city);
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)

@@ -33,16 +33,16 @@ export default function RestaurantsPage() {
   const format4 = { display: 'grid', justifyContent: 'space-evenly' };
 
   const cities = [
-    { name: 'Los Angeles', id: 'los-angeles' },
-    { name: 'Chicago', id: 'chicago' },
-    { name: 'Miami', id: 'miami' },
-    { name: 'Dallas', id: 'dallas' },
-    { name: 'Philadelphia', id: 'philadelphia' },
-    { name: 'Houston', id: 'houston' },
-    { name: 'Atlanta', id: 'atlanta' },
-    { name: 'Washington', id: 'washington' },
-    { name: 'Boston', id: 'boston' },
-    { name: 'Phoenix', id: 'phoenix' }
+    { name: 'Los Angeles', id: 1},
+    { name: 'Chicago', id: 2 },
+    { name: 'Miami', id: 3 },
+    { name: 'Dallas', id: 4 },
+    { name: 'Philadelphia', id: 5},
+    { name: 'Houston', id: 6 },
+    { name: 'Atlanta', id: 7},
+    { name: 'Washington', id: 8},
+    { name: 'Boston', id: 9 },
+    { name: 'Phoenix', id: 10}
   ];
 
   return (
