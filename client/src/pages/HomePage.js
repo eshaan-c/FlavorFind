@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Container, Typography, Paper, Divider, Card, CardMedia, Grid } from '@mui/material';
-import { NavLink } from 'react-router-dom';
+import { Box, Button, Container, Typography, Paper, Divider, Card, CardMedia, Grid} from '@mui/material';
+import { NavLink, Link } from 'react-router-dom';
 
 
 const config = require('../config.json');
@@ -40,10 +40,11 @@ export default function HomePage() {
       </Paper>
       <Grid container spacing={3}>
       <Grid item xs={12} md={6}>
+      <Link to="/search" style={{ textDecoration: 'none' }}>
         <Card>
           <CardMedia
             component="img"
-            height="140"
+            height="200"
             image="https://media.architecturaldigest.com/photos/572a34ffe50e09d42bdfb5e0/master/pass/japanese-restaurants-la-01.jpg"
             alt="Find Restaurants"
           />
@@ -51,12 +52,14 @@ export default function HomePage() {
             Find Restaurants
           </Typography>
         </Card>
+      </Link>
       </Grid>
       <Grid item xs={12} md={6}>
+      <Link to="/searchhotels" style={{ textDecoration: 'none' }}>
         <Card>
           <CardMedia
             component="img"
-            height="140"
+            height="200"
             image="https://i.pinimg.com/originals/20/07/d6/2007d6dd4ca8f4b527d19c7baaefab7e.jpg"
             alt="Find Hotels"
           />
@@ -64,6 +67,7 @@ export default function HomePage() {
             Find Hotels
           </Typography>
         </Card>
+      </Link>
       </Grid>
     </Grid>
 
