@@ -367,17 +367,18 @@ const find_filtered_restaurants = async function(req, res) {
     const rating = parseFloat(req.params.rating);
 
     connection.query(`
-      SELECT DISTINCT name, rating, category, address
+      SELECT MIN(id) AS id, name, rating, category, address
       FROM Restaurants
       WHERE rating >= ? AND category LIKE ? AND city = ?
+      GROUP BY name, rating, category, address
       ORDER BY rating DESC`, [rating, '%' + category + '%', city],
       (err, data) => {
-        if (err) {
-          console.log(err);
-          res.json({});
-        } else {
-          res.json(data);
-        }
+      if (err) {
+        console.log(err);
+        res.json({});
+      } else {
+        res.json(data);
+      }
     });
 }
 

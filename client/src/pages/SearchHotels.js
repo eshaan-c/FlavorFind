@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Button, Container, Grid, TextField } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { Link } from 'react-router-dom';
 
 const config = require('../config.json');
 
-export default function SearchPage() {
+export default function SearchHotels() {
   const [pageSize, setPageSize] = useState(10);
   const [data, setData] = useState([]);
 
@@ -22,21 +21,12 @@ export default function SearchPage() {
       });
   }
 
-const columns = [
-    { 
-        field: 'name', 
-        headerName: 'Name', 
-        width: 300,
-        renderCell: (params) => (
-            <Link to={`/restaurants/${params.row.id}`}>
-                {params.value}
-            </Link>
-        )
-    },
+  const columns = [
+    { field: 'name', headerName: 'Name', width: 300 },
     { field: 'rating', headerName: 'Rating' },
     { field: 'category', headerName: 'Category' },
     { field: 'address', headerName: 'Address' },
-];
+  ]
 
 return (
     <Container>
@@ -52,13 +42,8 @@ return (
                 <TextField label='Minimum Rating' value={rating} onChange={(e) => setRating(e.target.value)} style={{ width: "100%" }}/>
             </Grid>
         </Grid>
-        <Button 
-        variant="contained" 
-        color="inherit" 
-        onClick={() => search()} 
-        style={{ left: '50%', transform: 'translateX(-50%)', marginTop: '5mm'  }}
-        >
-        Search
+        <Button onClick={() => search() } style={{ left: '50%', transform: 'translateX(-50%)' }}>
+            Search
         </Button>
         <h2>Results</h2>
         <DataGrid

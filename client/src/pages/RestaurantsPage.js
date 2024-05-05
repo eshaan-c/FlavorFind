@@ -1,17 +1,28 @@
 import { useEffect, useState } from 'react';
-import { Box, Container } from '@mui/material';
+import { Box, Container, CircularProgress  } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 const config = require('../config.json');
 
 export default function RestaurantsPage() {
   const [restaurants, setRestaurants] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch(`http://${config.server_host}:${config.server_port}/top_restaurants`)
       .then(res => res.json())
-      .then(resJson => setRestaurants(resJson));
+      .then(resJson => setRestaurants(resJson))
+      .then(() => setLoading(false));
   }, []);
+
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </div>
+    );
+  }
 
   // These formatting options leverage flexboxes, an incredibly powerful tool for formatting dynamic layouts.
   // You can learn more on MDN web docs linked below (or many other online resources)

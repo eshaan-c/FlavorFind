@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Container } from '@mui/material';
+import { Box, Container, CircularProgress  } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 const config = require('../config.json');
@@ -7,11 +7,26 @@ const config = require('../config.json');
 export default function HotelsPage() {
   const [hotels, setHotels] = useState([]);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     fetch(`http://${config.server_host}:${config.server_port}/top_hotels`)
       .then(res => res.json())
-      .then(resJson => setHotels(resJson));
+      .then(resJson => {
+        setHotels(resJson);
+        setLoading(false);
+      });
   }, []);
+
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </div>
+    );
+  }
+
 
   const format1 = {};
   const format2 = { display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' };
