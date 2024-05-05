@@ -12,6 +12,7 @@ import HotelDetailsPage from "./pages/HotelDetailsPage";
 import HotelsPage from "./pages/HotelsPage";
 import AnalyzerPage from "./pages/AnalyzerPage";
 import TopRestaurantsPage from "./pages/TopRestaurantsPage";
+import SearchHotelsPage from "./pages/SearchHotelsPage";
 
 // createTheme enables you to customize the look and feel of your app past the default
 // in this case, we only change the color scheme
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="/hotels" element={<HotelsPage />} />
           <Route path="/hotels/:hotel_id" element={<HotelDetailsPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/searchhotels" element={<SearchHotelsPage />} />
           <Route path="/analyzer" element={<AnalyzerPage />} />
           <Route path="/toprestaurants/:city_id" element={<TopRestaurantsPage />} />
         </Routes>
