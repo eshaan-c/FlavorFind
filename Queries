@@ -235,3 +235,8 @@ WHERE REGEXP_SUBSTR(address, '[0-9]{5}') = ?
 GROUP BY category
 ORDER BY average_rating DESC
 LIMIT 5;
+
+#Query 21: Number of restaurants in a given zip code
+SELECT COUNT(*)
+FROM Restaurants
+WHERE REGEXP_SUBSTR(address, '[0-9]{5}') = ?
