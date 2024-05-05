@@ -39,7 +39,7 @@ export default function NavBar() {
           <NavText href='/' text='FlavorFind' isMain />
           <NavText href='/restaurants' text='Restaurants' />
           <NavText href='/hotels' text='Hotels' />
-          <NavText href='/songs' text='Search' />
+          <NavText href='/search' text='Search' />
         </Toolbar>
       </Container>
     </AppBar>

@@ -6,7 +6,7 @@ import { createTheme } from "@mui/material/styles";
 import NavBar from './components/NavBar';
 import HomePage from './pages/HomePage';
 import RestaurantsPage from './pages/RestaurantsPage';
-import SongsPage from './pages/SongsPage';
+import SearchPage from './pages/SearchPage';
 import RestaurantDetailsPage from './pages/RestaurantDetailsPage'
 import HotelDetailsPage from "./pages/HotelDetailsPage";
 import HotelsPage from "./pages/HotelsPage";
@@ -36,7 +36,7 @@ export default function App() {
           <Route path="/restaurants/:restaurant_id" element={<RestaurantDetailsPage />} />
           <Route path="/hotels" element={<HotelsPage />} />
           <Route path="/hotels/:hotel_id" element={<HotelDetailsPage />} />
-          <Route path="/songs" element={<SongsPage />} />
+          <Route path="/search" element={<SearchPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
