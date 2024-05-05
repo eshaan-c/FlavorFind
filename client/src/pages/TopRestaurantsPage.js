@@ -1,29 +1,30 @@
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Box, Container, CircularProgress  } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 const config = require('../config.json');
 
-export default function RestaurantsPage() {
+export default function TopRestaurantsPage() {
+  const { city_id } = useParams();
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  fetch(`http://${config.server_host}:${config.server_port}/top_restaurants`)
-    .then(res => res.json())
-    .then(resJson => {
-      setRestaurants(resJson);
-    })
-    .then(() => setLoading(false));
-}, []);
+  useEffect(() => {
+    fetch(`http://${config.server_host}:${config.server_port}/top_restaurants_city/${city_id}`)
+      .then(res => res.json())
+      .then(resJson => setRestaurants(resJson))
+      .then(() => setLoading(false));
+  }, [city_id]);
 
-if (loading) {
-  return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <CircularProgress />
-    </div>
-  );
-}
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </div>
+    );
+  }
 
   // These formatting options leverage flexboxes, an incredibly powerful tool for formatting dynamic layouts.
   // You can learn more on MDN web docs linked below (or many other online resources)
@@ -51,7 +52,7 @@ if (loading) {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
         <div style={{ width: '80%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '30px', marginBottom: '15px' }}>
           <div>
-            <h2 style={{ margin: '0', fontSize: '35px' }}>Top restaurants in popular cities:</h2>
+            <h2 style={{ margin: '0', fontSize: '35px' }}>Top restaurants in {restaurants[0].city}</h2>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               {cities.map((city, index) => (
                 <NavLink key={index} to={`/toprestaurants/${city.id}`} style={{ fontSize: '16px' }}>{city.name}</NavLink>
@@ -73,8 +74,8 @@ if (loading) {
                 background: '#e2c3c3'
               }}
             >
-              <NavLink to={`/restaurants/${restaurant.restaurant_id}`}>
-                <h4>{restaurant.city_name} - {restaurant.restaurant_name}</h4>
+              <NavLink to={`/restaurants/${restaurant.id}`}>
+                <h4>{restaurant.city} - {restaurant.name}</h4>
               </NavLink>
               <p>{restaurant.address}</p>
               <p>Rating: {restaurant.rating} / 5</p>

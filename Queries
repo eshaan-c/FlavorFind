@@ -1,3 +1,7 @@
+CREATE INDEX idx_restaurants_city ON Restaurants(city);
+CREATE INDEX idx_cities_city ON Cities(city);
+CREATE INDEX idx_cities_zips ON Cities(zips);
+
 #Query 1: Find nearest restaurants in a city
 SELECT DISTINCT r.name, r.rating, r.city, r.address, (
         3959 * ACOS(
@@ -17,7 +21,7 @@ FROM Restaurants
 GROUP BY category
 ORDER BY category;
 
-#Query 3: Find closest hotels in a city
+#Query 3: Find the closest hotels in a city
 SELECT DISTINCT h.name, h.rating, h.city, h.description
 FROM Hotels h
 JOIN Cities c ON c.city LIKE '%New York%' AND h.city LIKE '%New York%'
@@ -27,12 +31,12 @@ WHERE ABS(h.lat - c.lat) <= 0.1 AND ABS(h.lng - c.lng) <= 0.1;
 SELECT c.id, c.city, c.zips, COUNT(r.id) AS num_restaurants
 FROM Cities c
 LEFT JOIN Restaurants r ON c.city = r.city
-WHERE c.city = 'Raleigh'
+WHERE c.city = 'Chapel Hill'
 AND FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
 GROUP BY c.id
 ORDER BY num_restaurants DESC;
 
-#Query 5: Find restaurants in a city that are above a specified rating threshold and category
+#Query 5: Find restaurants in a city, specifying category and rating
 SELECT name, rating, category, address
 FROM Restaurants
 WHERE rating > 4.5 AND category LIKE '%Italian%' AND city = 'New York'
@@ -48,42 +52,28 @@ ORDER BY num_restaurants DESC
 LIMIT 20;
 
 #Query 7: Find top restaurants in each city
-SELECT DISTINCT c.id, c.city AS city_name, r.address AS address, r.name AS restaurant_name, r.rating
-FROM Cities c
-JOIN Restaurants r ON c.city = r.city
-WHERE (r.id, r.city, r.rating) IN (
-    SELECT r.id, r.city, MAX(rating) AS max_rating
+SELECT DISTINCT *
+FROM Cities c, Restaurants r
+WHERE c.city = r.city AND (r.id, r.city, r.rating) IN (
+    SELECT r.id, r.city, MAX(r.rating) AS rating
     FROM Restaurants r JOIN Cities c on c.city = r.city
     WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
-    GROUP BY r.city
-) AND FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
-ORDER BY r.rating DESC;
+    GROUP BY c.id
+)
+ORDER BY c.id, r.rating DESC;
 
-#Query 7 (Updated): 
-
-SELECT
-    id,
-    city_name,
-    address,
-    restaurant_name,
-    rating
+#Optimized Query 7
+CREATE INDEX idx_restaurants_city ON Restaurants(city);
+CREATE INDEX idx_cities_city ON Cities(city);
+CREATE INDEX idx_cities_zips ON Cities(zips);
+SELECT id, city_name, address, restaurant_name, rating
 FROM (
-    SELECT
-        c.id,
-        c.city AS city_name,
-        r.address AS address,
-        r.name AS restaurant_name,
-        r.rating,
+    SELECT c.id, c.city AS city_name, r.address AS address, r.name AS restaurant_name, r.rating,
         ROW_NUMBER() OVER (PARTITION BY c.city ORDER BY r.rating DESC) AS row_num
-    FROM
-        Restaurants r
-    JOIN
-        Cities c ON r.city = c.city
-    WHERE
-        FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
+    FROM Restaurants r JOIN Cities c ON r.city = c.city
+    WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
 ) ranked_restaurants
-WHERE
-    row_num = 1
+WHERE row_num = 1
 ORDER BY id
 LIMIT 10;
 
@@ -99,7 +89,7 @@ WHERE row_num = 1
 ORDER BY id
 LIMIT 10;
 
-#Query 9: Restaurants given a certain city, rating, and category requirement
+#Query 9: Restaurants given a certain city, rating range, and category requirement
 SELECT r.name, r.rating, r.category
 FROM Restaurants r
 WHERE r.city = 'Los Angeles' AND r.category = 'Italian restaurant' AND r.rating BETWEEN 4.0 AND 4.5
@@ -125,6 +115,14 @@ AND r.id NOT IN (
     WHERE c2.city <> 'Greenville'
 );
 
+#Optimized Query 11
+SELECT DISTINCT r.name, r.rating, r.category, r.address, c.city AS city
+FROM Restaurants r
+JOIN Cities c ON r.city = c.city
+LEFT JOIN Restaurants r2 ON r.id = r2.id AND r2.city <> 'Greenville'
+WHERE c.city = 'Greenville'
+  AND r2.id IS NULL;
+
 #Query 12: Find top 10 cities with the highest average rating in a certain category
 WITH CityRestaurantCounts AS (
     SELECT c.city, r.category, COUNT(*) AS restaurant_count
@@ -141,26 +139,99 @@ GROUP BY crc.city
 ORDER BY avg_rating DESC
 LIMIT 10;
 
-
-#Displays top 10 restaurants in Philadelphia
-SELECT DISTINCT id, name, address, rating
-FROM Restaurants
-WHERE city = 'Philadelphia'
-ORDER BY rating DESC
+#Query 12 optimized
+SELECT c.city,
+       AVG(r.rating) OVER (PARTITION BY c.city) AS avg_rating
+FROM Cities c
+JOIN Restaurants r ON r.city = c.city
+WHERE r.category = ?
+GROUP BY c.city
+HAVING COUNT(*) >= 10
+ORDER BY avg_rating DESC
 LIMIT 10;
 
-#Displays a random list of top 20 restaurants around the US
-SELECT r.name, r.rating, r.address
-FROM Restaurants r
-WHERE r.rating = 5.00
-ORDER BY RAND()
-LIMIT 20;
-
-#Find all cities with no restaurants in them
-SELECT *
+#Query 13: Find all cities with no restaurants in them
+SELECT COUNT(*)
 FROM Cities c
 WHERE NOT EXISTS (
     SELECT 1
     FROM Restaurants r
     WHERE r.city = c.city
 )
+ORDER BY c.id DESC;
+
+#Query 14: Generate a random list of top-rated restaurants
+SELECT r.name, r.rating, r.address
+FROM Restaurants r
+WHERE r.rating = 5.00
+ORDER BY RAND()
+LIMIT 20;
+
+#Query 15: Generate a random list of top-rated hotels
+SELECT r.name, r.rating, r.address
+FROM Restaurants r
+WHERE r.rating = 5.00
+ORDER BY RAND()
+LIMIT 20;
+
+#Query 16: Find restaurants close by to a hotel
+SELECT r.id, r.name, r.address, r.rating
+FROM Hotels h JOIN Restaurants r
+    ON REGEXP_SUBSTR(h.address, '[0-9]{5}') = REGEXP_SUBSTR(r.address, '[0-9]{5}')
+WHERE h.id = ?;
+
+#Query 17:
+#23 second query that finds percentages of a category in each city
+WITH RankedCategories AS (
+    SELECT category,
+           ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS category_rank
+    FROM Restaurants
+    GROUP BY category
+)
+SELECT c.id AS city_id,
+       c.city AS city_name,
+       rc.category,
+       CONCAT(ROUND(COUNT(*) * 100.0 / total_restaurants, 2), '%') AS percentage
+FROM Cities c
+CROSS JOIN RankedCategories rc
+LEFT JOIN Restaurants r ON r.city = c.city AND r.category = rc.category
+LEFT JOIN (
+    SELECT city, COUNT(*) AS total_restaurants
+    FROM Restaurants
+    GROUP BY city
+) AS city_totals ON c.city = city_totals.city
+WHERE rc.category_rank <= 10
+GROUP BY c.id, c.city, rc.category, total_restaurants
+ORDER BY c.id, rc.category_rank;
+
+#Query 18: Finds the average ratings for the top 10 popular categories in each city
+WITH RankedCategories AS (
+    SELECT city, category, AVG(rating) AS avg_rating,
+           ROW_NUMBER() OVER (PARTITION BY city ORDER BY COUNT(*) DESC) AS category_rank
+    FROM Restaurants
+    GROUP BY city, category
+)
+SELECT city, category, AVG(avg_rating) AS average_rating
+FROM (
+    SELECT city, category, avg_rating, ROW_NUMBER() OVER (PARTITION BY city ORDER BY category_rank) AS row_num
+    FROM RankedCategories
+) AS ranked
+WHERE row_num <= 10
+GROUP BY city, category
+ORDER BY city, row_num;
+
+#Query 19: Top 10 restaurants given a city
+SELECT c.city, r.name, r.address, r.rating, r.id
+FROM Restaurants r JOIN Cities c ON r.city = c.city
+WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0 AND c.id = ?
+ORDER BY r.rating DESC
+LIMIT 10;
+
+#Query 20: Top 5 rated cuisines in a zipcode
+SELECT category,
+       AVG(rating) AS average_rating
+FROM Restaurants
+WHERE REGEXP_SUBSTR(address, '[0-9]{5}') = ?
+GROUP BY category
+ORDER BY average_rating DESC
+LIMIT 5;
