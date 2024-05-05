@@ -20,8 +20,8 @@ export default function HomePage() {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ bgcolor: '#f3c9c1', height: '40vh', py: 8 }}>
-        <Typography variant="h2" align="center" gutterBottom>
+      <Box sx={{ bgcolor: '#f3c9c1', height: '28vh', py: 8 }}>
+        <Typography variant="h2" align="center" gutterBottom style={{ fontWeight: 'bold' }}>
           Welcome to FlavorFind!
         </Typography>
         <Typography variant="h5" align="center" gutterBottom>
