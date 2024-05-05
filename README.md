@@ -5,23 +5,18 @@ To run the Flavor Find application locally, follow these steps:
 
 Clone the repository.
 
-Install the required dependencies:
-
+# Install dependencies
 cd flavor-find/server
 npm install
 
-
-# Install client-side dependencies
 cd ../client
 npm install
 
-Start the server and client:
-
-cd ../server
-npm start
-
 # Start the client (in a new terminal window)
 cd ../client
+npm start
+
+cd ../server
 npm start
 
 The client and server should both now be running in two terminals.
