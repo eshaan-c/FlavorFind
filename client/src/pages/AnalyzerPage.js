@@ -65,6 +65,9 @@ export default function AnalyzerPage() {
         ))}
       </ul>
     </Paper>
+    <Typography variant="body1" align="left" color="text.secondary" style={{ marginBottom: '20px', marginTop: '20px' }}>
+      Developed by Eshaan Chichula, Shruthi Kunjur, Marc Vaz
+    </Typography>
   </Container>
 );
 }
