@@ -179,3 +179,50 @@ SELECT r.id, r.name, r.address, r.rating
 FROM Hotels h JOIN Restaurants r
     ON REGEXP_SUBSTR(h.address, '[0-9]{5}') = REGEXP_SUBSTR(r.address, '[0-9]{5}')
 WHERE h.id = ?;
+
+#Query 17:
+#23 second query that finds percentages of a category in each city
+WITH RankedCategories AS (
+    SELECT category,
+           ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS category_rank
+    FROM Restaurants
+    GROUP BY category
+)
+SELECT c.id AS city_id,
+       c.city AS city_name,
+       rc.category,
+       CONCAT(ROUND(COUNT(*) * 100.0 / total_restaurants, 2), '%') AS percentage
+FROM Cities c
+CROSS JOIN RankedCategories rc
+LEFT JOIN Restaurants r ON r.city = c.city AND r.category = rc.category
+LEFT JOIN (
+    SELECT city, COUNT(*) AS total_restaurants
+    FROM Restaurants
+    GROUP BY city
+) AS city_totals ON c.city = city_totals.city
+WHERE rc.category_rank <= 10
+GROUP BY c.id, c.city, rc.category, total_restaurants
+ORDER BY c.id, rc.category_rank;
+
+#Query 18: Finds the average ratings for the top 10 popular categories in each city
+WITH RankedCategories AS (
+    SELECT city, category, AVG(rating) AS avg_rating,
+           ROW_NUMBER() OVER (PARTITION BY city ORDER BY COUNT(*) DESC) AS category_rank
+    FROM Restaurants
+    GROUP BY city, category
+)
+SELECT city, category, AVG(avg_rating) AS average_rating
+FROM (
+    SELECT city, category, avg_rating, ROW_NUMBER() OVER (PARTITION BY city ORDER BY category_rank) AS row_num
+    FROM RankedCategories
+) AS ranked
+WHERE row_num <= 10
+GROUP BY city, category
+ORDER BY city, row_num;
+
+#Query 19: Top 10 restaurants per city
+SELECT c.city, r.name, r.address, r.rating, r.id
+FROM Restaurants r JOIN Cities c ON r.city = c.city
+WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0 AND c.id = ?
+ORDER BY r.rating DESC
+LIMIT 10;
