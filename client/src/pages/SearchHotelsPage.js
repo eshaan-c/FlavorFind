@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Container, Grid, TextField } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 const config = require('../config.json');
@@ -31,7 +32,16 @@ export default function SearchHotelsPage() {
   }
 
   const columns = [
-    { field: 'name', headerName: 'Name', width: 300 },
+    { 
+      field: 'name', 
+      headerName: 'Name', 
+      width: 300,
+      renderCell: (params) => (
+          <Link to={`/hotels/${params.row.id}`}>
+              {params.value}
+          </Link>
+      )
+  },
     { field: 'rating', headerName: 'Rating' },
     { field: 'address', headerName: 'Address' },
   ]
