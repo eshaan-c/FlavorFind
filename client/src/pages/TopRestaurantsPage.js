@@ -49,41 +49,46 @@ export default function TopRestaurantsPage() {
 
   return (
     <>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
-        <div style={{ width: '80%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '30px', marginBottom: '15px' }}>
-          <div>
-            <h2 style={{ margin: '0', fontSize: '35px' }}>Top restaurants in {restaurants[0].city}</h2>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              {cities.map((city, index) => (
-                <NavLink key={index} to={`/toprestaurants/${city.id}`} style={{ fontSize: '16px' }}>{city.name}</NavLink>
-              ))}
-            </div>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
+      <div style={{ width: '80%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '30px', marginBottom: '15px' }}>
+        <div>
+          <h2 style={{ margin: '0', fontSize: '35px' }}>Top restaurants in popular cities:</h2>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            {cities.map((city, index) => (
+              <NavLink key={index} to={`/toprestaurants/${city.id}`} style={{ fontSize: '16px' }}>{city.name}</NavLink>
+            ))}
           </div>
-          <NavLink to="/analyzer" style={{ fontSize: '24px' }}>City Restaurant Analyzer</NavLink>
         </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-          {restaurants.map((restaurant) =>
-            <div
-              key={restaurant.id}
-              style={{
-                width: '45%',
-                padding: '10px',
-                margin: '10px 2.5%',
-                border: '1px solid #000',
-                borderRadius: '5px',
-                background: '#e2c3c3'
-              }}
-            >
+        <NavLink to="/analyzer" style={{ fontSize: '24px' }}>City Restaurant Analyzer</NavLink>
+      </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+        {restaurants.map((restaurant) =>
+          <div
+            key={restaurant.id}
+            style={{
+              width: '45%',
+              padding: '10px',
+              margin: '10px 2.5%',
+              border: '1px solid #000',
+              borderRadius: '5px',
+              background: '#e2c3c3',
+              display: 'flex',
+              flexDirection: 'row'
+            }}
+          >
+            <div>
               <NavLink to={`/restaurants/${restaurant.id}`}>
                 <h4>{restaurant.city} - {restaurant.name}</h4>
               </NavLink>
               <p>{restaurant.address}</p>
               <p>Rating: {restaurant.rating} / 5</p>
             </div>
-          )}
-        </div>
+            <img src={restaurant.images} alt={restaurant.restaurant_name} style={{ marginLeft: '10px', height: '100px', width: '100px' }} />
+          </div>
+        )}
       </div>
-      <h2 style={{ fontWeight: 'normal', fontSize: '1em', color: 'gray' }}>Developed by Eshaan Chichula, Shruthi Kunjur, Marc Vaz </h2>
-    </>
+    </div>
+    <h2 style={{ fontWeight: 'normal', fontSize: '1em', color: 'gray' }}>Developed by Eshaan Chichula, Shruthi Kunjur, Marc Vaz </h2>
+  </>
   );
 }

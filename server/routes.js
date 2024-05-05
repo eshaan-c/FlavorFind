@@ -506,10 +506,10 @@ const top_restaurants = async function(req, res) {
   const top_restaurants_city = async function(req, res) {
       const city_id = req.params.city_id;
       connection.query(`
-      SELECT c.city, r.name, r.address, r.rating, MIN(r.id) AS id
-      FROM Restaurants r JOIN Cities c ON r.city = c.city
+      SELECT c.city, r.name, r.address, r.rating, MIN(r.id) AS id, r.images
+      FROM Restaurants2 r JOIN Cities c ON r.city = c.city
       WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0 AND c.id = ?
-      GROUP BY c.city, r.name, r.address, r.rating
+      GROUP BY c.city, r.name, r.address, r.rating, r.images
       ORDER BY r.rating DESC
       LIMIT 10;`, [city_id],
       (err, data) => {
