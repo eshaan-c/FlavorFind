@@ -46,7 +46,7 @@ return (
                 <TextField label='City' value={city} onChange={(e) => setCity(e.target.value)} style={{ width: "100%" }}/>
             </Grid>
             <Grid item xs={4}>
-                <TextField label='Category' value={category} onChange={(e) => setCategory(e.target.value)} style={{ width: "100%" }}/>
+                <TextField label='Category (e.g. Indian, Italian, Chinese)' value={category} onChange={(e) => setCategory(e.target.value)} style={{ width: "100%" }}/>
             </Grid>
             <Grid item xs={4}>
                 <TextField label='Minimum Rating' value={rating} onChange={(e) => setRating(e.target.value)} style={{ width: "100%" }}/>

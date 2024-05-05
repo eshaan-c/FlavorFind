@@ -8,21 +8,22 @@ export default function RestaurantsPage() {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/top_restaurants`)
-      .then(res => res.json())
-      .then(resJson => setRestaurants(resJson))
-      .then(() => setLoading(false));
-  }, []);
+useEffect(() => {
+  fetch(`http://${config.server_host}:${config.server_port}/top_restaurants`)
+    .then(res => res.json())
+    .then(resJson => {
+      setRestaurants(resJson);
+    })
+    .then(() => setLoading(false));
+}, []);
 
-
-  if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <CircularProgress />
-      </div>
-    );
-  }
+if (loading) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <CircularProgress />
+    </div>
+  );
+}
 
   // These formatting options leverage flexboxes, an incredibly powerful tool for formatting dynamic layouts.
   // You can learn more on MDN web docs linked below (or many other online resources)
@@ -46,14 +47,19 @@ export default function RestaurantsPage() {
               margin: '10px 2.5%',
               border: '1px solid #000',
               borderRadius: '5px',
-              background: '#e2c3c3'
+              background: '#e2c3c3',
+              display: 'flex',
+              flexDirection: 'row'
             }}
           >
-            <NavLink to={`/restaurants/${restaurant.restaurant_id}`}>
-              <h4>{restaurant.city_name} - {restaurant.restaurant_name}</h4>
-            </NavLink>
-            <p>{restaurant.address}</p>
-            <p>Rating: {restaurant.rating} / 5</p>
+            <div>
+              <NavLink to={`/restaurants/${restaurant.restaurant_id}`}>
+                <h4>{restaurant.city_name} - {restaurant.restaurant_name}</h4>
+              </NavLink>
+              <p>{restaurant.address}</p>
+              <p>Rating: {restaurant.rating} / 5</p>
+            </div>
+            <img src={restaurant.images} alt={restaurant.restaurant_name} style={{ marginLeft: '10px', height: '100px', width: '100px' }} />
           </div>
         )}
       </div>

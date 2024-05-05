@@ -276,7 +276,7 @@ const find_restaurants = async function(req, res) {
           SIN(RADIANS(c.lat)) * SIN(RADIANS(r.lat))
       )
     ) AS distance
-    FROM Restaurants r
+    FROM Restaurants2 r
     JOIN Cities c ON r.city = c.city
     WHERE c.city LIKE '%${cityName}%'
     ORDER BY distance ASC;`,
@@ -297,7 +297,7 @@ const average_cuisine_rating = async function(req, res) {
 
   connection.query(`
   SELECT AVG(rating) AS avg_rating
-  FROM Restaurants
+  FROM Restaurants2
   WHERE category = ?`,
     [cuisineType],
     (err, data) => {
@@ -344,7 +344,7 @@ const num_restaurants = async function(req, res) {
     connection.query(`
       SELECT c.id, c.city, c.zips, COUNT(r.id) AS num_restaurants
       FROM Cities c
-      LEFT JOIN Restaurants r ON c.city = r.city
+      LEFT JOIN Restaurants2 r ON c.city = r.city
       WHERE c.city = ?
       AND FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ',')) > 0
       GROUP BY c.id
@@ -368,7 +368,7 @@ const find_filtered_restaurants = async function(req, res) {
 
     connection.query(`
       SELECT MIN(id) AS id, name, rating, category, address
-      FROM Restaurants
+      FROM Restaurants2
       WHERE rating >= ? AND category LIKE ? AND city = ?
       GROUP BY name, rating, category, address
       ORDER BY rating DESC`, [rating, '%' + category + '%', city],
@@ -392,7 +392,8 @@ const top_restaurants = async function(req, res) {
     city_name,
     address,
     restaurant_name,
-    rating
+    rating,
+    images
     FROM (
         SELECT
             c.id AS city_id,
@@ -401,9 +402,10 @@ const top_restaurants = async function(req, res) {
             r.address AS address,
             r.name AS restaurant_name,
             r.rating,
+            r.images,
             ROW_NUMBER() OVER (PARTITION BY c.city ORDER BY r.rating DESC) AS row_num
         FROM
-            Restaurants r
+            Restaurants2 r
         JOIN
             Cities c ON r.city = c.city
         WHERE
@@ -451,7 +453,7 @@ const top_restaurants = async function(req, res) {
   const get_rest_info = async function(req, res) {
     const restaurant_id = req.params.restaurant_id;
     connection.query(
-      'SELECT * FROM Restaurants WHERE id = ?',
+      'SELECT * FROM Restaurants2 WHERE id = ?',
       [restaurant_id],
       (err, data) => {
         if (err || data.length === 0) {
@@ -485,7 +487,7 @@ const top_restaurants = async function(req, res) {
   const random = async function(req, res) {
     connection.query(`
     SELECT r.name AS name, r.rating AS rating, r.address AS address, r.id AS id
-    FROM Restaurants r
+    FROM Restaurants2 r
     WHERE r.rating > 4.75
     ORDER BY RAND()
     LIMIT 1;

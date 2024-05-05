@@ -10,13 +10,21 @@ export default function HotelsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+  const cachedData = localStorage.getItem('top_hotels');
+
+  if (cachedData) {
+    setHotels(JSON.parse(cachedData));
+    setLoading(false);
+  } else {
     fetch(`http://${config.server_host}:${config.server_port}/top_hotels`)
       .then(res => res.json())
       .then(resJson => {
         setHotels(resJson);
+        localStorage.setItem('top_hotels', JSON.stringify(resJson));
         setLoading(false);
       });
-  }, []);
+  }
+}, []);
 
 
   if (loading) {
