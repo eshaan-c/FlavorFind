@@ -66,7 +66,7 @@ export default function RestaurantsPage() {
           </div>
         </div>
       <Button variant="contained" style={{ backgroundColor: 'salmon' }}>
-        <NavLink to="/analyzer" style={{ fontSize: '20px', color: 'black', textDecoration: 'none', fontWeight: 'bold' }}>City Restaurant Analyzer</NavLink>
+        <NavLink to="/analyzer" style={{ fontSize: '20px', color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>City Restaurant Analyzer</NavLink>
       </Button>
       </div>
       <div style={format3}>
