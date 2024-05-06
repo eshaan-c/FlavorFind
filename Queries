@@ -254,6 +254,8 @@ WHERE FIND_IN_SET(REGEXP_SUBSTR(r.address, '[0-9]{5}'), REPLACE(c.zips, ' ', ','
 GROUP BY c.city;
 
 #Another query
+CREATE INDEX idx_city_rating ON Hotels (city_name, rating DESC);
+CREATE INDEX idx_group_by ON Hotels (name, rating DESC, address);
 SELECT MIN(id), name, rating, address
     FROM Hotels
     WHERE rating >= ? AND city_name = ?
@@ -277,3 +279,5 @@ TopCategories AS (
     LIMIT 5
 )
 SELECT * FROM TopCategories;
+
+
