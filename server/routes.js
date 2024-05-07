@@ -10,8 +10,8 @@ const connection = mysql.createConnection({
 });
 connection.connect((err) => err && console.log(err));
 
-//Query 4: Find number of restaurants in a city
-
+// Route: GET /restaurants/num/:zip
+// Description: Find the number of restaurants in a city based on ZIP code
 const num_restaurants = async function(req, res) {
     const zip = req.params.zip;
     connection.query(`
@@ -35,8 +35,8 @@ const num_restaurants = async function(req, res) {
     });
 }
 
-//Query 5: Find restaurants in a city that are above a specified rating threshold and in a specific category
-
+// Route: GET /restaurants/filter/:city/:category/:rating
+// Description: Find restaurants in a city that are above a specified rating threshold and in a specific category
 const find_filtered_restaurants = async function(req, res) {
     const city = req.params.city;
     const category = req.params.category;
@@ -58,8 +58,8 @@ const find_filtered_restaurants = async function(req, res) {
     });
 }
 
-//Query 6: Find hotels in a city that are above a specified rating threshold
-
+// Route: GET /hotels/filter/:city/:rating
+// Description: Find hotels in a city that are above a specified rating threshold
 const find_filtered_hotels = async function(req, res) {
   const city = req.params.city;
   const rating = parseFloat(req.params.rating);
@@ -80,8 +80,8 @@ const find_filtered_hotels = async function(req, res) {
   });
 }
 
-//Query 7: Find the top restaurant in each city
-
+// Route: GET /restaurants/top
+// Description: Find the top restaurant in each city
 const top_restaurants = async function(req, res) {
     connection.query(`
     SELECT
@@ -123,7 +123,8 @@ const top_restaurants = async function(req, res) {
     });
   }
 
-   //Query 8: Find the top hotels in each city
+// Route: GET /hotels/top
+// Description: Find the top hotels in each city
  const top_hotels = async function(req, res) {
   connection.query(`
   SELECT city_id, hotel_id, city_name, address, hotel_name, rating
@@ -147,7 +148,8 @@ const top_restaurants = async function(req, res) {
   });
 }
 
-  // Route: GET /restaurant/:id
+// Route: GET /restaurant/:id
+// Description: Get information about a specific restaurant
   const get_rest_info = async function(req, res) {
     const restaurant_id = req.params.restaurant_id;
     connection.query(
@@ -164,7 +166,8 @@ const top_restaurants = async function(req, res) {
     );
   };
 
-  // Route: GET /restaurant/:id
+// Route: GET /hotel/:id
+// Description: Get information about a specific hotel
   const get_hotel_info = async function(req, res) {
     const hotel_id = req.params.hotel_id;
     connection.query(
@@ -181,7 +184,9 @@ const top_restaurants = async function(req, res) {
     );
   };
 
-  // Route: GET /random
+  
+  // Route: GET /restaurants/random
+// Description: Get a random restaurant with a rating above 4.75
   const random = async function(req, res) {
     connection.query(`
     SELECT r.name AS name, r.rating AS rating, r.address AS address, r.id AS id
@@ -199,8 +204,8 @@ const top_restaurants = async function(req, res) {
     });
   }
 
-  //Route: GET /toprestaurants/:city_id
-
+  // Route: GET /restaurants/top/:city_id
+// Description: Find the top restaurants in a specific city
   const top_restaurants_city = async function(req, res) {
       const city_id = req.params.city_id;
       connection.query(`
@@ -220,8 +225,8 @@ const top_restaurants = async function(req, res) {
       });
   }
 
-  //Route: GET /topcuisines/:zip
-
+  // Route: GET /cuisines/top/:zip
+// Description: Find the top cuisines in a city based on ZIP code
   const top_cuisines = async function(req, res) {
     const zip = req.params.zip;
     connection.query(`
@@ -251,6 +256,8 @@ const top_restaurants = async function(req, res) {
       });
   }
 
+  // Route: GET /restaurants/near/:hotel_id
+// Description: Find restaurants near a specific hotel
   const rests_near_hotel = async function(req, res) {
     const hotel_id = req.params.hotel_id;
     connection.query(`
@@ -269,8 +276,7 @@ const top_restaurants = async function(req, res) {
     });
   }
 
-
-
+// Export the routes
 module.exports = {
   num_restaurants,
   find_filtered_restaurants,
