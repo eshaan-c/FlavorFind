@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Container, CircularProgress, Button  } from '@mui/material';
+import { CircularProgress, Button  } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 const config = require('../config.json');
