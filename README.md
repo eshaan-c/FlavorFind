@@ -1,5 +1,8 @@
 # FlavorFind
 
+<img width="1680" alt="Screenshot 2024-05-07 at 11 14 55 AM" src="https://github.com/eshaan-c/FlavorFind/assets/138060037/99bfd33e-56b6-473a-b239-6d15ed6880a9">
+
+
 Getting Started
 To run the Flavor Find application locally, follow these steps:
 
