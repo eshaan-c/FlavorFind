@@ -251,6 +251,24 @@ const top_restaurants = async function(req, res) {
       });
   }
 
+  const rests_near_hotel = async function(req, res) {
+    const hotel_id = req.params.hotel_id;
+    connection.query(`
+    SELECT r.id, r.name, r.address, r.rating
+    FROM Hotels h JOIN Restaurants2 r
+        ON REGEXP_SUBSTR(h.address, '[0-9]{5}') = REGEXP_SUBSTR(r.address, '[0-9]{5}')
+    WHERE h.id = ?
+    LIMIT 5;`, [hotel_id],
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.json({});
+      } else {
+        res.json(data);
+      }
+    });
+  }
+
 
 
 module.exports = {
@@ -263,5 +281,6 @@ module.exports = {
   random,
   top_restaurants_city,
   find_filtered_hotels,
-  top_cuisines
+  top_cuisines,
+  rests_near_hotel
 }

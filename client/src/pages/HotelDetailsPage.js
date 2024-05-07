@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, NavLink } from 'react-router-dom';
 import { Card, CardContent, Typography, CircularProgress, Button, Grid } from '@mui/material';
 import { Container, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
@@ -12,6 +12,7 @@ export default function HotelDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [showAttractions, setShowAttractions] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
+  const [restaurantsNearHotel, setRestaurantsNearHotel] = useState([]);
 
   const toggleAttractions = () => {
     setShowAttractions(!showAttractions);
@@ -27,6 +28,12 @@ export default function HotelDetailsPage() {
       .then(resJson => {
         setHotelData(resJson);
         setLoading(false);
+      });
+
+    fetch(`http://${config.server_host}:${config.server_port}/rests_near_hotel/${hotel_id}`)
+      .then(res => res.json())
+      .then(resJson => {
+        setRestaurantsNearHotel(resJson);
       });
 
   }, [hotel_id]);
@@ -55,6 +62,16 @@ export default function HotelDetailsPage() {
             </Typography>
             <Typography variant="h6" style={{ color: '#333', fontFamily: '-apple-system, BlinkMacSystemFont, "San Francisco", Helvetica, Arial, sans-serif', marginBottom: '10px' }}>
               <strong>Address:</strong> <a style={{wordWrap: 'break-word' }}>{hotelData.address.split(/(?=[A-Z])/).join(' ')}</a>
+            </Typography>
+            <Typography variant="h6" style={{ color: '#333', fontFamily: '-apple-system, BlinkMacSystemFont, "San Francisco", Helvetica, Arial, sans-serif', marginBottom: '10px' }}>
+              <strong>Restaurants nearby:</strong> {restaurantsNearHotel.map((restaurant, index) => (
+                <span key={restaurant.id}>
+                  <NavLink to={`/restaurants/${restaurant.id}`}>
+                    {restaurant.name}
+                  </NavLink>
+                  {index < restaurantsNearHotel.length - 1 ? ', ' : ''}
+                </span>
+              ))}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>

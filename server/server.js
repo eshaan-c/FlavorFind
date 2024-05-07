@@ -19,6 +19,7 @@ app.get('/random', routes.random);
 app.get('/top_restaurants_city/:city_id', routes.top_restaurants_city);
 app.get('/find_filtered_hotels/:city/:rating', routes.find_filtered_hotels);
 app.get('/top_cuisines/:zip', routes.top_cuisines);
+app.get('/rests_near_hotel/:hotel_id', routes.rests_near_hotel);
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
