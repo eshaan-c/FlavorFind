@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, NavLink } from 'react-router-dom';
 import { Card, CardContent, Typography, CircularProgress, Button, Grid } from '@mui/material';
-import { Container, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
-import { formatDuration, formatReleaseDate } from '../helpers/formatter';
 const config = require('../config.json');
 
 export default function HotelDetailsPage() {
