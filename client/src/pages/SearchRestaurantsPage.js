@@ -3,8 +3,6 @@ import { Button, Container, Grid, TextField } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-
-
 const config = require('../config.json');
 
 export default function SearchRestaurantsPage() {
@@ -16,7 +14,8 @@ export default function SearchRestaurantsPage() {
   const [category, setCategory] = useState('');
   const [rating, setRating] = useState(0);
 
-const search = () => {
+  // This function is used to search for restaurants based on the provided filters.
+  const search = () => {
     const searchCategory = category || ' ';
     const searchCity = city || ' ';
     const searchRating = rating || 0;
@@ -27,8 +26,9 @@ const search = () => {
             const restaurantsWithId = resJson.map((restaurant, index) => ({ id: index, ...restaurant }));
             setData(restaurantsWithId);
         });
-}
+  }
 
+  // This function toggles between the search page and the search hotels page.
   const togglePage = () => {
     if (window.location.pathname === '/search') {
       navigate('/searchhotels');
@@ -37,11 +37,12 @@ const search = () => {
     }
   }
 
-const columns = [
+  const columns = [
     { 
         field: 'name', 
         headerName: 'Name', 
         width: 300,
+        // This function renders the name of the restaurant as a link to its details page.
         renderCell: (params) => (
             <Link to={`/restaurants/${params.row.id}`}>
                 {params.value}
@@ -51,57 +52,57 @@ const columns = [
     { field: 'rating', headerName: 'Rating' },
     { field: 'category', headerName: 'Category' },
     { field: 'address', headerName: 'Address' },
-];
+  ];
 
-return (
-  <Container>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-      <h2>Search Restaurants</h2>
+  return (
+    <Container>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h2>Search Restaurants</h2>
+        <Button 
+          onClick={togglePage} 
+          style={{ 
+            backgroundColor: 'salmon', 
+            color: 'white', 
+            fontWeight: 'bold', 
+            padding: '10px 20px'
+          }}
+        >
+          Go to Search Hotels
+        </Button>
+      </div>
+      <Grid container spacing={6}>
+        <Grid item xs={4}>
+          <TextField label='City' value={city} onChange={(e) => setCity(e.target.value)} style={{ width: "100%" }}/>
+        </Grid>
+        <Grid item xs={4}>
+          <TextField label='Category (e.g. Indian, Italian, Chinese)' value={category} onChange={(e) => setCategory(e.target.value)} style={{ width: "100%" }}/>
+        </Grid>
+        <Grid item xs={4}>
+          <TextField label='Minimum Rating' value={rating} onChange={(e) => setRating(e.target.value)} style={{ width: "100%" }}/>
+        </Grid>
+      </Grid>
       <Button 
-        onClick={togglePage} 
-        style={{ 
-          backgroundColor: 'salmon', 
-          color: 'white', 
-          fontWeight: 'bold', 
-          padding: '10px 20px'
-        }}
+        variant="contained" 
+        color="inherit" 
+        onClick={() => search()} 
+        style={{ left: '50%', transform: 'translateX(-50%)', marginTop: '5mm'  }}
       >
-        Go to Search Hotels
+        Search
       </Button>
-    </div>
-    <Grid container spacing={6}>
-      <Grid item xs={4}>
-        <TextField label='City' value={city} onChange={(e) => setCity(e.target.value)} style={{ width: "100%" }}/>
-      </Grid>
-      <Grid item xs={4}>
-        <TextField label='Category (e.g. Indian, Italian, Chinese)' value={category} onChange={(e) => setCategory(e.target.value)} style={{ width: "100%" }}/>
-      </Grid>
-      <Grid item xs={4}>
-        <TextField label='Minimum Rating' value={rating} onChange={(e) => setRating(e.target.value)} style={{ width: "100%" }}/>
-      </Grid>
-    </Grid>
-    <Button 
-      variant="contained" 
-      color="inherit" 
-      onClick={() => search()} 
-      style={{ left: '50%', transform: 'translateX(-50%)', marginTop: '5mm'  }}
-    >
-      Search
-    </Button>
-    <h2>Results</h2>
-    <DataGrid
-      rows={data}
-      columns={columns.map((column) => {
-        if (column.field === 'name' || column.field === 'address') {
-          return { ...column, flex: 1 };
-        }
-        return { ...column, width: 160 };
-      })}
-      pageSize={pageSize}
-      rowsPerPageOptions={[5, 10, 25]}
-      onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-      autoHeight
-    />
-  </Container>
-);
+      <h2>Results</h2>
+      <DataGrid
+        rows={data}
+        columns={columns.map((column) => {
+          if (column.field === 'name' || column.field === 'address') {
+            return { ...column, flex: 1 };
+          }
+          return { ...column, width: 160 };
+        })}
+        pageSize={pageSize}
+        rowsPerPageOptions={[5, 10, 25]}
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+        autoHeight
+      />
+    </Container>
+  );
 }

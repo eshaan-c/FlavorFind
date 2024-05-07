@@ -6,10 +6,12 @@ import { NavLink } from 'react-router-dom';
 const config = require('../config.json');
 
 export default function TopRestaurantsPage() {
+  // Get the city_id from the URL parameters
   const { city_id } = useParams();
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetch the top restaurants in the city when the component mounts or city_id changes
   useEffect(() => {
     fetch(`http://${config.server_host}:${config.server_port}/top_restaurants_city/${city_id}`)
       .then(res => res.json())
@@ -18,6 +20,7 @@ export default function TopRestaurantsPage() {
   }, [city_id]);
 
 
+  // Show a loading spinner while the data is being fetched
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -25,8 +28,10 @@ export default function TopRestaurantsPage() {
       </div>
     );
   }
-  const format3 = { display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' };
 
+  const format = { display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' };
+
+  // Define a list of cities
   const cities = [
     { name: 'Los Angeles', id: 1},
     { name: 'Chicago', id: 2 },
@@ -47,6 +52,7 @@ export default function TopRestaurantsPage() {
           <div>
             <h2 style={{ margin: '0', fontSize: '35px' }}>Top restaurants in {restaurants[0].city}:</h2>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              {/* Map over the cities and create a NavLink for each one */}
               {cities.map((city, index) => (
                 <NavLink key={index} to={`/toprestaurants/${city.id}`} style={{ fontSize: '16px' }}>{city.name}</NavLink>
               ))}
@@ -56,7 +62,7 @@ export default function TopRestaurantsPage() {
             <NavLink to="/analyzer" style={{ fontSize: '20px', color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>City Restaurant Analyzer</NavLink>
           </Button>
         </div>
-        <div style={format3}>
+        <div style={format}>
           {restaurants.map((restaurant) =>
             <div
               key={restaurant.id}

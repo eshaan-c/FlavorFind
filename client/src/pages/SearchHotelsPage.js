@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const config = require('../config.json');
 
 export default function SearchHotelsPage() {
+  // State variables
   const [pageSize, setPageSize] = useState(10);
   const [data, setData] = useState([]);
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export default function SearchHotelsPage() {
   const [city, setCity] = useState('');
   const [rating, setRating] = useState(0);
 
+  // Function to search hotels
   const search = () => {
     const searchCity = city || ' ';
     const searchRating = rating || 0;
@@ -25,6 +27,7 @@ export default function SearchHotelsPage() {
       });
   }
 
+  // Function to toggle between search hotels and search restaurants pages
   const togglePage = () => {
     if (window.location.pathname === '/searchhotels') {
       navigate('/search');
@@ -33,6 +36,7 @@ export default function SearchHotelsPage() {
     }
   }
 
+  // Define the columns for the DataGrid
   const columns = [
     { 
       field: 'name', 
@@ -43,7 +47,7 @@ export default function SearchHotelsPage() {
               {params.value}
           </Link>
       )
-  },
+    },
     { field: 'rating', headerName: 'Rating' },
     { 
       field: 'address', 
@@ -52,12 +56,14 @@ export default function SearchHotelsPage() {
         <p style={{ margin: '0' }}>{params.value.split(/(?=[A-Z])/).join(' ')}</p>
       )
     },
-  ]
+  ];
 
   return (
     <Container>
+      {/* Search Hotels header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <h2>Search Hotels</h2>
+        {/* Button to toggle between search hotels and search restaurants */}
         <Button 
           onClick={togglePage} 
           style={{ 
@@ -70,6 +76,7 @@ export default function SearchHotelsPage() {
           Go to Search Restaurants
         </Button>
       </div>
+      {/* Search form */}
       <Grid container spacing={6}>
         <Grid item xs={6}>
           <TextField label='City' value={city} onChange={(e) => setCity(e.target.value)} style={{ width: "100%" }}/>
@@ -78,6 +85,7 @@ export default function SearchHotelsPage() {
           <TextField label='Minimum Rating' value={rating} onChange={(e) => setRating(e.target.value)} style={{ width: "100%" }}/>
         </Grid>
       </Grid>
+      {/* Search button */}
       <Button 
         variant="contained" 
         color="inherit" 
@@ -86,7 +94,9 @@ export default function SearchHotelsPage() {
       >
         Search
       </Button>
+      {/* Results header */}
       <h2>Results</h2>
+      {/* DataGrid to display search results */}
       <DataGrid
         rows={data}
         columns={columns.map((column) => {

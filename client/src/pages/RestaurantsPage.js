@@ -32,14 +32,9 @@ export default function RestaurantsPage() {
     );
   }
 
-  // These formatting options leverage flexboxes, an incredibly powerful tool for formatting dynamic layouts.
-  // You can learn more on MDN web docs linked below (or many other online resources)
-  // https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox
-  const format1 = {};
-  const format2 = { display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' };
   const format3 = { display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' };
-  const format4 = { display: 'grid', justifyContent: 'space-evenly' };
 
+  //Cities list for popular ones
   const cities = [
     { name: 'Los Angeles', id: 1},
     { name: 'Chicago', id: 2 },
@@ -54,56 +49,64 @@ export default function RestaurantsPage() {
   ];
 
   return (
-  <>
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
-      <div style={{ width: '80%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '30px', marginBottom: '15px' }}>
-        <div>
-          <h2 style={{ margin: '0', fontSize: '35px' }}>Top restaurants in popular cities:</h2>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {cities.map((city, index) => (
-              <NavLink key={index} to={`/toprestaurants/${city.id}`} style={{ fontSize: '16px' }}>{city.name}</NavLink>
-            ))}
+    <>
+      {/* Top restaurants section */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
+        <div style={{ width: '80%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '30px', marginBottom: '15px' }}>
+          <div>
+            {/* Heading */}
+            <h2 style={{ margin: '0', fontSize: '35px' }}>Top restaurants in popular cities:</h2>
+            {/* Cities list */}
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              {cities.map((city, index) => (
+                <NavLink key={index} to={`/toprestaurants/${city.id}`} style={{ fontSize: '16px' }}>{city.name}</NavLink>
+              ))}
+            </div>
           </div>
+          {/* Button */}
+          <Button variant="contained" style={{ backgroundColor: 'salmon' }}>
+            {/* Link to City Restaurant Analyzer */}
+            <NavLink to="/analyzer" style={{ fontSize: '20px', color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>City Restaurant Analyzer</NavLink>
+          </Button>
         </div>
-      <Button variant="contained" style={{ backgroundColor: 'salmon' }}>
-        <NavLink to="/analyzer" style={{ fontSize: '20px', color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>City Restaurant Analyzer</NavLink>
-      </Button>
+        {/* Restaurant cards */}
+        <div style={format3}>
+          {restaurants.map((restaurant) =>
+            <div
+              key={restaurant.id}
+              style={{
+                width: '45%',
+                padding: '10px',
+                margin: '10px 2.5%',
+                border: '1px solid #000',
+                borderRadius: '5px',
+                background: '#e2c3c3',
+                display: 'flex',
+                justifyContent: 'space-between', // Align items horizontally
+                alignItems: 'center' // Center vertically
+              }}
+            >
+              <div style={{ fontFamily: 'Georgia, serif' }}>
+                {/* Link to individual restaurant */}
+                <NavLink
+                  to={`/restaurants/${restaurant.restaurant_id}`}
+                  style={{ textDecoration: 'none', color: '#000', transition: 'transform 0.3s' }}
+                  onMouseEnter={(e) => { e.target.style.textDecoration = 'underline'; e.target.style.transform = 'scale(1.1)'; }}
+                  onMouseLeave={(e) => { e.target.style.textDecoration = 'none'; e.target.style.transform = 'scale(1)'; }}
+                >
+                  <h4 style={{ textAlign: 'center' }}>{restaurant.restaurant_name}</h4>
+                </NavLink>
+                <p style={{ margin: '0' }}>{restaurant.city_name}</p>
+                <p style={{ margin: '0' }}>{restaurant.address}</p>
+                <p style={{ margin: '0' }}>Rating: {restaurant.rating} / 5</p>
+              </div>
+              <img src={restaurant.images} alt={restaurant.restaurant_name} style={{ marginLeft: '10px', height: '100px', width: '100px', borderRadius: '10px' }} />
+            </div>
+          )}
+        </div>
       </div>
-      <div style={format3}>
-        {restaurants.map((restaurant) =>
-          <div
-  key={restaurant.id}
-  style={{
-    width: '45%',
-    padding: '10px',
-    margin: '10px 2.5%',
-    border: '1px solid #000',
-    borderRadius: '5px',
-    background: '#e2c3c3',
-    display: 'flex',
-    justifyContent: 'space-between', // Align items horizontally
-    alignItems: 'center' // Center vertically
-  }}
->
-  <div style={{ fontFamily: 'Georgia, serif' }}>
-  <NavLink 
-  to={`/restaurants/${restaurant.restaurant_id}`} 
-  style={{ textDecoration: 'none', color: '#000', transition: 'transform 0.3s' }}
-  onMouseEnter={(e) => { e.target.style.textDecoration = 'underline'; e.target.style.transform = 'scale(1.1)'; }}
-  onMouseLeave={(e) => { e.target.style.textDecoration = 'none'; e.target.style.transform = 'scale(1)'; }}
->
-  <h4 style={{ textAlign: 'center' }}>{restaurant.restaurant_name}</h4>
-</NavLink>
-    <p style={{ margin: '0' }}>{restaurant.city_name}</p>
-    <p style={{ margin: '0' }}>{restaurant.address}</p>
-    <p style={{ margin: '0' }}>Rating: {restaurant.rating} / 5</p>
-  </div>
-  <img src={restaurant.images} alt={restaurant.restaurant_name} style={{ marginLeft: '10px', height: '100px', width: '100px', borderRadius: '10px' }} />
-</div>
-        )}
-      </div>
-    </div>
-    <h2 style={{ fontWeight: 'normal', fontSize: '1em', color: 'gray' }}>Developed by Eshaan Chichula, Shruthi Kunjur, Marc Vaz </h2>
-  </>
-);
+      {/* Footer */}
+      <h2 style={{ fontWeight: 'normal', fontSize: '1em', color: 'gray' }}>Developed by Eshaan Chichula, Shruthi Kunjur, Marc Vaz </h2>
+    </>
+  );
 }
