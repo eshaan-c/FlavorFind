@@ -5,13 +5,16 @@ import { NavLink } from 'react-router-dom';
 const config = require('../config.json');
 
 export default function HotelsPage() {
-  const [hotels, setHotels] = useState([]);
+  // Initialize state for hotels data and loading status
+const [hotels, setHotels] = useState([]);
+const [loading, setLoading] = useState(true);
 
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
+// Use useEffect to fetch data when the component mounts
+useEffect(() => {
+  // Try to get data from local storage
   const cachedData = localStorage.getItem('top_hotels');
 
+  // If data exists in local storage, use it. Otherwise, fetch data from the server
   if (cachedData) {
     setHotels(JSON.parse(cachedData));
     setLoading(false);
@@ -24,9 +27,9 @@ export default function HotelsPage() {
         setLoading(false);
       });
   }
-}, []);
+}, []); // Run useEffect once on component mount
 
-
+// show loading symbol if data is still loading
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -36,10 +39,7 @@ export default function HotelsPage() {
   }
 
 
-  const format1 = {};
-  const format2 = { display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' };
   const format3 = { display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' };
-  const format4 = { display: 'grid', justifyContent: 'space-evenly' };
 
   return (
     <>
@@ -67,6 +67,7 @@ export default function HotelsPage() {
   }}
 >
   <div style={{ fontFamily: 'Georgia, serif' }}>
+    { /* NavLink component for each hotel, linking to the hotel's page, with UI effects */ }
   <NavLink 
   to={`/hotels/${hotel.hotel_id}`} 
   style={{ textDecoration: 'none', color: '#000', transition: 'transform 0.3s' }}
@@ -76,7 +77,7 @@ export default function HotelsPage() {
   <h4 style={{ textAlign: 'center' }}>{hotel.hotel_name}</h4>
 </NavLink>
 
-
+  { /* Display city name, address, and rating */}
     <NavLink to={`/toprestaurants/${hotel.city_id}`} style={{ textDecoration: 'underline', color: '#1403fb' }}>
   <p style={{ margin: '0' }}>{hotel.city_name}</p>
 </NavLink>

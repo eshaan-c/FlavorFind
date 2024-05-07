@@ -25,14 +25,7 @@ export default function TopRestaurantsPage() {
       </div>
     );
   }
-
-  // These formatting options leverage flexboxes, an incredibly powerful tool for formatting dynamic layouts.
-  // You can learn more on MDN web docs linked below (or many other online resources)
-  // https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox
-  const format1 = {};
-  const format2 = { display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' };
   const format3 = { display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' };
-  const format4 = { display: 'grid', justifyContent: 'space-evenly' };
 
   const cities = [
     { name: 'Los Angeles', id: 1},
