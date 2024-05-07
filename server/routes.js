@@ -10,80 +10,6 @@ const connection = mysql.createConnection({
 });
 connection.connect((err) => err && console.log(err));
 
-const find_restaurants = async function(req, res) {
-  // given a city name, return nearby restaurants based on a distance function
-
-  const cityName = req.params.city;
-
-  connection.query(`
-    SELECT DISTINCT r.name, r.rating, r.city, r.address, (
-      3959 * ACOS(
-          COS(RADIANS(c.lat)) * COS(RADIANS(r.lat)) *
-          COS(RADIANS(r.lng) - RADIANS(c.lng)) +
-          SIN(RADIANS(c.lat)) * SIN(RADIANS(r.lat))
-      )
-    ) AS distance
-    FROM Restaurants2 r
-    JOIN Cities c ON r.city = c.city
-    WHERE c.city LIKE '%${cityName}%'
-    ORDER BY distance ASC;`,
-    (err, data) => {
-      if (err) {
-        console.log(err);
-        res.json({});
-      } else {
-        res.json(data);
-      }
-  });
-}
-
-const average_cuisine_rating = async function(req, res) {
-  // given a type of cuisine, return the average rating of restaurants serving that cuisine
-
-  const cuisineType = req.params.cuisine;
-
-  connection.query(`
-  SELECT AVG(rating) AS avg_rating
-  FROM Restaurants2
-  WHERE category = ?`,
-    [cuisineType],
-    (err, data) => {
-      if (err) {
-        console.log(err);
-        res.json({});
-      } else {
-        res.json(data);
-      }
-  });
-}
-
-
-const closest_hotels = async function(req, res) {
-  const cityName = req.params.city;
-
-  connection.query(`
-    SELECT DISTINCT h.name, h.rating, h.city, h.description, (
-      3959 * ACOS(
-          COS(RADIANS(c.lat)) * COS(RADIANS(h.lat)) *
-          COS(RADIANS(h.lng) - RADIANS(c.lng)) +
-          SIN(RADIANS(c.lat)) * SIN(RADIANS(h.lat))
-      )
-    ) AS distance
-    FROM Hotels h
-    JOIN Cities c ON c.city LIKE '%${cityName}%' AND h.city LIKE '%${cityName}%'
-    WHERE ABS(h.lat - c.lat) <= 0.1 AND ABS(h.lng - c.lng) <= 0.1
-    ORDER BY distance ASC;
-  `,
-  (err, data) => {
-    if (err) {
-      console.log(err);
-      res.json({});
-    } else {
-      res.json(data);
-    }
-  });
-}
-
 //Query 4: Find number of restaurants in a city
 
 const num_restaurants = async function(req, res) {
@@ -328,9 +254,6 @@ const top_restaurants = async function(req, res) {
 
 
 module.exports = {
-  find_restaurants,
-  average_cuisine_rating,
-  closest_hotels,
   num_restaurants,
   find_filtered_restaurants,
   top_restaurants,
